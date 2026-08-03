@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Калькулятор стоимости — PolyPrint 3D</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #7b2cbf;
+      --accent: #ffca3a;
+      --bg: #0f0f1a;
+      --card: #1a1a2e;
+      --card-hover: #252540;
+      --text: #e8e8f0;
+      --muted: #a0a0b8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg); font-family: 'Inter', system-ui, sans-serif;
+      color: var(--text); line-height: 1.5; min-height: 100vh;
+    }
+    .nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.2rem 2rem; background: rgba(15,15,26,0.85);
+      backdrop-filter: blur(12px); position: sticky; top: 0; z-index: 100;
+      border-bottom: 1px solid rgba(123,44,191,0.2);
+    }
+    .logo { font-size: 1.5rem; font-weight: 800; color: var(--accent); letter-spacing: -0.5px; text-decoration: none; }
+    .logo span { color: var(--primary); }
+    .btn {
+      padding: 0.6rem 1.4rem; border-radius: 10px; border: none; cursor: pointer;
+      font-weight: 600; font-size: 0.95rem; transition: all 0.2s; font-family: inherit; text-decoration: none; display: inline-block;
+    }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-primary:hover { background: #9b4fd9; transform: translateY(-2px); }
+    .btn-accent { background: var(--accent); color: #1a1a2e; }
+    .btn-accent:hover { background: #ffe082; transform: translateY(-2px); }
+
+    .container { max-width: 960px; margin: 0 auto; padding: 2.5rem 2rem; }
+    .page-title { font-size: 1.8rem; font-weight: 800; margin-bottom: 0.4rem; }
+    .file-name { color: var(--accent); font-weight: 600; font-size: 1rem; margin-bottom: 2rem; }
+
+    .grid { display: grid; grid-template-columns: 1fr 340px; gap: 2rem; }
+    @media (max-width: 800px) { .grid { grid-template-columns: 1fr; } }
+
+    .panel {
+      background: var(--card); border-radius: 16px; padding: 1.8rem;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+    .panel h3 { font-size: 1.1rem; margin-bottom: 1.2rem; display: flex; align-items: center; gap: 0.5rem; }
+
+    .slider-group { margin-bottom: 1.5rem; }
+    .slider-header { display: flex; justify-content: space-between; margin-bottom: 0.5rem; }
+    .slider-label { font-size: 0.9rem; color: var(--muted); }
+    .slider-value { font-weight: 700; color: var(--accent); font-size: 0.95rem; }
+    input[type=range] {
+      -webkit-appearance: none; width: 100%; height: 8px; border-radius: 4px;
+      background: rgba(255,255,255,0.08); outline: none; cursor: pointer;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none; width: 22px; height: 22px; border-radius: 50%;
+      background: var(--accent); border: 3px solid var(--bg);
+      box-shadow: 0 2px 8px rgba(255,202,58,0.3); cursor: pointer; transition: transform 0.15s;
+    }
+    input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.15); }
+    input[type=range]::-moz-range-thumb {
+      width: 22px; height: 22px; border-radius: 50%; background: var(--accent);
+      border: 3px solid var(--bg); cursor: pointer;
+    }
+    .slider-hints { display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--muted); margin-top: 0.3rem; }
+
+    .materials { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.7rem; }
+    .mat-card {
+      padding: 1rem; border-radius: 12px; border: 2px solid rgba(255,255,255,0.06);
+      background: rgba(255,255,255,0.02); cursor: pointer; transition: all 0.2s;
+      display: flex; flex-direction: column; gap: 0.3rem;
+    }
+    .mat-card:hover { border-color: rgba(123,44,191,0.4); background: rgba(123,44,191,0.06); }
+    .mat-card.active {
+      border-color: var(--primary); background: rgba(123,44,191,0.12);
+      box-shadow: 0 0 20px rgba(123,44,191,0.15);
+    }
+    .mat-name { font-weight: 700; font-size: 0.95rem; }
+    .mat-price { font-size: 0.85rem; color: var(--muted); }
+    .mat-price strong { color: var(--accent); }
+
+    .summary {
+      background: linear-gradient(135deg, rgba(123,44,191,0.2), rgba(255,202,58,0.08));
+      border: 1px solid rgba(123,44,191,0.25); border-radius: 16px; padding: 1.5rem;
+      position: sticky; top: 6rem;
+    }
+    .summary h3 { font-size: 1.1rem; margin-bottom: 1rem; text-align: center; }
+    .sum-row { display: flex; justify-content: space-between; padding: 0.6rem 0; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 0.9rem; }
+    .sum-row:last-child { border-bottom: none; }
+    .sum-label { color: var(--muted); }
+    .sum-value { font-weight: 600; }
+    .sum-total {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-top: 1rem; padding-top: 1rem; border-top: 2px solid rgba(255,202,58,0.2);
+    }
+    .sum-total-label { font-size: 1rem; font-weight: 700; }
+    .sum-total-value { font-size: 1.8rem; font-weight: 800; color: var(--accent); }
+
+    .time-estimate {
+      background: rgba(255,202,58,0.08); border: 1px solid rgba(255,202,58,0.15);
+      border-radius: 10px; padding: 0.8rem; margin-top: 1rem; font-size: 0.85rem;
+      color: var(--muted); text-align: center;
+    }
+    .time-estimate strong { color: var(--accent); }
+
+    .actions { margin-top: 1.5rem; display: flex; gap: 0.7rem; flex-direction: column; }
+    .actions .btn { width: 100%; text-align: center; }
+
+    .info-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 2rem;
+    }
+    .info-cell {
+      background: var(--card); border-radius: 12px; padding: 1rem; text-align: center;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+    .info-cell .num { font-size: 1.3rem; font-weight: 800; color: var(--accent); }
+    .info-cell .lbl { font-size: 0.8rem; color: var(--muted); margin-top: 0.2rem; }
+
+    @media (max-width: 640px) {
+      .page-title { font-size: 1.4rem; }
+      .materials { grid-template-columns: 1fr; }
+      .info-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="nav">
+    <a href="index.html" class="logo">Poly<span>Print</span> 3D</a>
+    <div style="display:flex;gap:0.6rem;">
+      <a href="upload.html" class="btn btn-primary">← Новый файл</a>
+      <a href="index.html" class="btn btn-primary" style="background:transparent;border:1px solid rgba(255,255,255,0.1);">Главная</a>
+    </div>
+  </nav>
+
+  <div class="container">
+    <h1 class="page-title">Калькулятор стоимости</h1>
+    <div class="file-name" id="fileName">Загрузка...</div>
+
+    <div class="info-grid" id="infoGrid"></div>
+
+    <div class="grid">
+      <div>
+        <div class="panel" style="margin-bottom: 1.5rem;">
+          <h3>⚙️ Параметры печати</h3>
+
+          <div class="slider-group">
+            <div class="slider-header">
+              <span class="slider-label">Толщина стенки</span>
+              <span class="slider-value" id="wallVal">1.2 мм</span>
+            </div>
+            <input type="range" id="wall" min="0.4" max="2.0" step="0.1" value="1.2">
+            <div class="slider-hints"><span>0.4 мм</span><span>2.0 мм</span></div>
+          </div>
+
+          <div class="slider-group">
+            <div class="slider-header">
+              <span class="slider-label">Толщина дна и верха</span>
+              <span class="slider-value" id="topVal">0.8 мм</span>
+            </div>
+            <input type="range" id="top" min="0.2" max="2.0" step="0.1" value="0.8">
+            <div class="slider-hints"><span>0.2 мм</span><span>2.0 мм</span></div>
+          </div>
+
+          <div class="slider-group">
+            <div class="slider-header">
+              <span class="slider-label">Плотность заполнения (infill)</span>
+              <span class="slider-value" id="infillVal">20%</span>
+            </div>
+            <input type="range" id="infill" min="0" max="100" step="5" value="20">
+            <div class="slider-hints"><span>0%</span><span>100%</span></div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h3>🧪 Материал</h3>
+          <div class="materials" id="materials"></div>
+        </div>
+      </div>
+
+      <div class="summary">
+        <h3>💰 Итоговый расчёт</h3>
+        <div class="sum-row"><span class="sum-label">Объём модели</span><span class="sum-value" id="sVolume">—</span></div>
+        <div class="sum-row"><span class="sum-label">Объём материала</span><span class="sum-value" id="sMatVol">—</span></div>
+        <div class="sum-row"><span class="sum-label">Вес изделия</span><span class="sum-value" id="sWeight">—</span></div>
+        <div class="sum-row"><span class="sum-label">Материал</span><span class="sum-value" id="sMat">—</span></div>
+        <div class="sum-row"><span class="sum-label">Цена за грамм</span><span class="sum-value" id="sPricePer">—</span></div>
+
+        <div class="sum-total">
+          <span class="sum-total-label">Итого:</span>
+          <span class="sum-total-value" id="sTotal">—</span>
+        </div>
+
+        <div class="time-estimate">
+          ⏱ Примерное время печати: <strong id="sTime">—</strong>
+        </div>
+
+        <div class="actions">
+          <button class="btn btn-accent" style="font-size:1rem;padding:0.9rem;" onclick="alert('Заказ оформлен! Мы свяжемся с вами для уточнения деталей.')">✅ Оформить заказ</button>
+          <a href="upload.html" class="btn btn-primary">🔄 Рассчитать другую модель</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const materials = [
+      { id: 'PLA', name: 'PLA', price: 5.5, density: 1.24, desc: 'Прочный, экологичный' },
+      { id: 'PETG', name: 'PETG', price: 4.5, density: 1.27, desc: 'Гибкий, ударопрочный' },
+      { id: 'ABS', name: 'ABS', price: 6.0, density: 1.04, desc: 'Термостойкий' },
+      { id: 'TPU', name: 'TPU', price: 10.5, density: 1.21, desc: 'Резиноподобный' },
+      { id: 'RESIN', name: 'Resin', price: 19.5, density: 1.10, desc: 'Фотополимер, детали' },
+      { id: 'NYLON', name: 'Nylon', price: 14.5, density: 1.14, desc: 'Прочный, износостойкий' }
+    ];
+
+    let currentMat = 'PLA';
+    let modelData = null;
+
+    function init() {
+      const raw = localStorage.getItem('pp3d_file');
+      if (!raw) { window.location.href = 'upload.html'; return; }
+      modelData = JSON.parse(raw);
+
+      document.getElementById('fileName').textContent = '📁 ' + modelData.name;
+      document.getElementById('infoGrid').innerHTML = `
+        <div class="info-cell"><div class="num">${(modelData.volume/1000).toFixed(2)}</div><div class="lbl">см³ — объём</div></div>
+        <div class="info-cell"><div class="num">${(modelData.area/100).toFixed(2)}</div><div class="lbl">см² — площадь</div></div>
+        <div class="info-cell"><div class="num">${modelData.count.toLocaleString('ru')}</div><div class="lbl">треугольников</div></div>
+      `;
+
+      const matContainer = document.getElementById('materials');
+      materials.forEach(m => {
+        const div = document.createElement('div');
+        div.className = 'mat-card' + (m.id === currentMat ? ' active' : '');
+        div.innerHTML = `<div class="mat-name">${m.name}</div><div class="mat-price">${m.desc}<br><strong>${m.price} ₽/г</strong></div>`;
+        div.onclick = () => selectMaterial(m.id);
+        matContainer.appendChild(div);
+      });
+
+      ['wall','top','infill'].forEach(id => {
+        document.getElementById(id).addEventListener('input', updateCalc);
+      });
+
+      updateCalc();
+    }
+
+    function selectMaterial(id) {
+      currentMat = id;
+      document.querySelectorAll('.mat-card').forEach((c, i) => {
+        c.classList.toggle('active', materials[i].id === id);
+      });
+      updateCalc();
+    }
+
+    function updateCalc() {
+      const wall = parseFloat(document.getElementById('wall').value);
+      const top = parseFloat(document.getElementById('top').value);
+      const infill = parseFloat(document.getElementById('infill').value);
+      const mat = materials.find(m => m.id === currentMat);
+
+      document.getElementById('wallVal').textContent = wall.toFixed(1) + ' мм';
+      document.getElementById('topVal').textContent = top.toFixed(1) + ' мм';
+      document.getElementById('infillVal').textContent = infill + '%';
+
+      const V = modelData.volume; // mm³
+      const A = modelData.area;   // mm²
+
+      // Расчёт объёма материала
+      const shellVolume = Math.min(A * wall, V * 0.95);
+      const innerVolume = Math.max(0, V - shellVolume);
+      const infillVolume = innerVolume * (infill / 100);
+      const topBottomVolume = A * 0.12 * top * 2; // дно + верх ≈ 12% площади
+      const totalVolume = shellVolume + infillVolume + topBottomVolume;
+
+      const weight = totalVolume * mat.density / 1000; // граммы
+      const price = weight * mat.price;
+
+      // Эвристика времени печати: ~8 мм³/с для FDM, ~2 мм³/с для Resin
+      const speed = mat.id === 'RESIN' ? 2.0 : 8.0;
+      const seconds = totalVolume / speed;
+      const hours = Math.floor(seconds / 3600);
+      const mins = Math.floor((seconds % 3600) / 60);
+
+      document.getElementById('sVolume').textContent = (V/1000).toFixed(2) + ' см³';
+      document.getElementById('sMatVol').textContent = (totalVolume/1000).toFixed(2) + ' см³';
+      document.getElementById('sWeight').textContent = weight.toFixed(1) + ' г';
+      document.getElementById('sMat').textContent = mat.name;
+      document.getElementById('sPricePer').textContent = mat.price + ' ₽/г';
+      document.getElementById('sTotal').textContent = Math.round(price).toLocaleString('ru') + ' ₽';
+      document.getElementById('sTime').textContent = hours + ' ч ' + mins + ' мин';
+    }
+
+    init();
+  </script>
+
+</body>
+</html>
