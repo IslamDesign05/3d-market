@@ -3,148 +3,102 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Каталог — PolyPrint 3D</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <style>
-    :root { --primary: #7b2cbf; --accent: #ffca3a; --bg: #0f0f1a; --card: #1a1a2e; --card-hover: #252540; --text: #e8e8f0; --muted: #a0a0b8; }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background: var(--bg); font-family: 'Inter', system-ui, sans-serif; color: var(--text); line-height: 1.5; }
-    .nav { display: flex; align-items: center; justify-content: space-between; padding: 1.2rem 2rem; background: rgba(15,15,26,0.85); backdrop-filter: blur(12px); position: sticky; top: 0; z-index: 100; border-bottom: 1px solid rgba(123,44,191,0.2); }
-    .logo { font-size: 1.5rem; font-weight: 800; color: var(--accent); letter-spacing: -0.5px; text-decoration: none; }
-    .logo span { color: var(--primary); }
-    .nav-links { display: flex; gap: 2rem; list-style: none; }
-    .nav-links a { color: var(--muted); text-decoration: none; font-weight: 500; transition: color 0.2s; }
-    .nav-links a:hover, .nav-links a.active { color: var(--accent); }
-    .btn { padding: 0.6rem 1.4rem; border-radius: 10px; border: none; cursor: pointer; font-weight: 600; font-size: 0.95rem; transition: all 0.2s; font-family: inherit; text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem; }
-    .btn-primary { background: var(--primary); color: #fff; }
-    .btn-primary:hover { background: #9b4fd9; transform: translateY(-2px); }
-    .btn-accent { background: var(--accent); color: #1a1a2e; }
-    .btn-accent:hover { background: #ffe082; transform: translateY(-2px); }
-    .btn-outline { background: transparent; color: var(--muted); border: 1px solid rgba(255,255,255,0.1); }
-    .btn-outline:hover { border-color: var(--primary); color: var(--text); }
-    .btn-outline.active { background: rgba(123,44,191,0.2); color: var(--accent); border-color: var(--primary); }
-    .btn-ghost { background: transparent; color: var(--muted); border: 1px dashed rgba(255,255,255,0.1); }
-    .btn-ghost:hover { color: var(--text); border-color: var(--muted); }
-
-    .page-header { text-align: center; padding: 3rem 2rem 1.5rem; background: radial-gradient(ellipse at 50% 0%, rgba(123,44,191,0.12) 0%, transparent 60%); }
-    .page-header h1 { font-size: 2.4rem; font-weight: 800; margin-bottom: 0.5rem; }
-    .page-header p { color: var(--muted); font-size: 1.05rem; }
-
-    .filters-panel {
-      max-width: 1200px; margin: 0 auto; padding: 0 2rem 1.5rem;
-    }
-    .category-tabs {
-      display: flex; gap: 0.6rem; margin-bottom: 1.2rem; flex-wrap: wrap;
-    }
-    .tab-btn {
-      padding: 0.7rem 1.6rem; border-radius: 12px; border: 2px solid rgba(255,255,255,0.06);
-      background: var(--card); color: var(--muted); font-weight: 600; font-size: 0.95rem;
-      cursor: pointer; transition: all 0.2s; font-family: inherit; display: inline-flex; align-items: center; gap: 0.5rem;
-    }
-    .tab-btn:hover { border-color: rgba(123,44,191,0.4); color: var(--text); }
-    .tab-btn.active { border-color: var(--primary); background: rgba(123,44,191,0.15); color: var(--accent); box-shadow: 0 0 20px rgba(123,44,191,0.1); }
-
-    .sub-filters {
-      background: var(--card); border-radius: 16px; padding: 1.2rem 1.5rem;
-      border: 1px solid rgba(255,255,255,0.05); display: flex; gap: 1rem; flex-wrap: wrap; align-items: end;
-      animation: fadeIn 0.3s ease;
-    }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
-    .filter-group { display: flex; flex-direction: column; gap: 0.4rem; flex: 1; min-width: 180px; }
-    .filter-group label { font-size: 0.8rem; color: var(--muted); font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
-    .filter-group select {
-      padding: 0.6rem 2.2rem 0.6rem 0.9rem; border-radius: 10px; border: 1px solid rgba(255,255,255,0.08);
-      background: var(--bg); color: var(--text); font-size: 0.95rem; font-family: inherit;
-      outline: none; cursor: pointer; appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23a0a0b8'%3E%3Cpath d='M6 9L1 4h10z'/%3E%3C/svg%3E");
-      background-repeat: no-repeat; background-position: right 0.9rem center;
-    }
-    .filter-group select:focus { border-color: var(--primary); }
-    .filter-group select option { background: var(--card); color: var(--text); }
-
-    .results-bar {
-      max-width: 1200px; margin: 0 auto; padding: 1rem 2rem 0.5rem;
-      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;
-    }
-    .results-count { color: var(--muted); font-size: 0.9rem; }
-    .results-count strong { color: var(--accent); }
-
-    .section { max-width: 1200px; margin: 0 auto; padding: 1rem 2rem 3rem; }
-    .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 1.5rem; }
-    .product-card {
-      background: var(--card); border-radius: 16px; overflow: hidden;
-      border: 1px solid rgba(255,255,255,0.05); transition: all 0.3s;
-      display: flex; flex-direction: column; animation: cardIn 0.4s ease;
-    }
-    .product-card:hover { transform: translateY(-6px); border-color: rgba(123,44,191,0.4); box-shadow: 0 20px 40px rgba(123,44,191,0.15); }
-    .product-card.hidden { display: none; }
-    @keyframes cardIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-    .product-img {
-      height: 200px; background: linear-gradient(135deg, rgba(123,44,191,0.25), rgba(255,202,58,0.12));
-      display: flex; align-items: center; justify-content: center; font-size: 4rem; position: relative;
-    }
-    .product-tag { position: absolute; top: 0.8rem; left: 0.8rem; padding: 0.25rem 0.7rem; border-radius: 8px; font-size: 0.75rem; font-weight: 700; }
-    .tag-new { background: var(--accent); color: #1a1a2e; }
-    .tag-hit { background: #e74c3c; color: #fff; }
-    .tag-sale { background: var(--primary); color: #fff; }
-    .product-body { padding: 1.2rem; flex: 1; display: flex; flex-direction: column; }
-    .product-title { font-size: 1.05rem; font-weight: 700; margin-bottom: 0.3rem; }
-    .product-desc { color: var(--muted); font-size: 0.88rem; margin-bottom: 0.8rem; flex: 1; }
-    .product-meta { display: flex; gap: 0.4rem; margin-bottom: 1rem; flex-wrap: wrap; }
-    .meta-chip {
-      font-size: 0.72rem; padding: 0.2rem 0.5rem; border-radius: 6px;
-      background: rgba(123,44,191,0.12); color: var(--primary); font-weight: 500;
-    }
-    .meta-chip.accent { background: rgba(255,202,58,0.1); color: var(--accent); }
-    .product-footer { display: flex; align-items: center; justify-content: space-between; }
-    .product-price { font-size: 1.15rem; font-weight: 800; color: var(--accent); }
-    .product-price .old { font-size: 0.85rem; color: var(--muted); text-decoration: line-through; margin-left: 0.4rem; font-weight: 500; }
-
-    .footer { text-align: center; padding: 2rem; color: var(--muted); font-size: 0.9rem; border-top: 1px solid rgba(255,255,255,0.05); margin-top: 2rem; }
-    .cart-float {
-      position: fixed; bottom: 1.5rem; right: 1.5rem; background: var(--primary); color: #fff;
-      padding: 0.9rem 1.4rem; border-radius: 50px; font-weight: 700;
-      box-shadow: 0 8px 24px rgba(123,44,191,0.4); cursor: pointer; z-index: 200;
-      display: flex; align-items: center; gap: 0.5rem; transition: all 0.2s;
-      border: none; font-family: inherit; font-size: 1rem;
-    }
-    .cart-float:hover { transform: scale(1.05); }
-    .cart-count { background: var(--accent); color: #1a1a2e; border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; }
-    .no-results { text-align: center; padding: 4rem 2rem; color: var(--muted); font-size: 1.1rem; grid-column: 1 / -1; }
-
-    @media (max-width: 640px) {
-      .page-header h1 { font-size: 1.8rem; }
-      .nav-links { display: none; }
-      .sub-filters { flex-direction: column; align-items: stretch; }
-      .filter-group { min-width: 100%; }
-    }
-  </style>
+  <title>Каталог товаров — 3D Print Studio</title>
+  <script src="auth.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="products.css">
 </head>
 <body>
 
+  <!-- Фоновая технологичная сетка -->
+  <div class="bg-grid" aria-hidden="true"></div>
+
+  <!-- ═════ НАВИГАЦИЯ (ТОЧНО КАК НА ГЛАВНОЙ СТРАНИЦЕ INDEX.HTML) ═════ -->
   <nav class="nav">
-  <a href="index.html" class="logo">3D<span>Print</span>Studio</a>
-  <ul class="nav-links">
-    <li><a href="index.html">Главная</a></li>
-    <li><a href="products.html">Товары</a></li>
-    <li><a href="upload.html">Калькулятор</a></li>
-    <li><a href="index.html#contacts">Контакты</a></li>
-  </ul>
-  <!-- ВОТ ЭТОТ БЛОК: -->
-  <div style="display:flex;align-items:center;gap:0.6rem;" id="navAuth"></div>
-</nav>
+    <a href="index.html" class="logo">
+      <span class="badge-icon">◈</span>
+      3D<span>Print</span>Studio
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html">Главная</a></li>
+      <li><a href="products.html" class="active">Товары</a></li>
+      <li><a href="upload.html">Калькулятор</a></li>
+      <li><a href="index.html#services">Услуги и ремонт</a></li>
+      <li><a href="index.html#contacts">Контакты</a></li>
+    </ul>
+    <div class="nav-auth" id="navAuth">
+      <a href="login.html" class="btn-login">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+          <circle cx="12" cy="7" r="4"></circle>
+        </svg>
+        <span>Войти</span>
+      </a>
+      <a href="register.html" class="btn-register">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+          <circle cx="8.5" cy="7" r="4"></circle>
+          <line x1="20" y1="8" x2="20" y2="14"></line>
+          <line x1="23" y1="11" x2="17" y2="11"></line>
+        </svg>
+        <span>Регистрация</span>
+      </a>
+    </div>
+  </nav>
 
-  <div class="page-header">
-    <h1>Каталог товаров</h1>
-    <p>Готовые изделия и запчасти для авто и бытовой техники</p>
-  </div>
+  <!-- ═════ ЗАГОЛОВОК СТРАНИЦЫ ═════ -->
+  <header class="page-header">
+    <span class="section-kicker">Каталог 3D Print Studio</span>
+    <h1>Каталог готовых изделий</h1>
+    <p>Надёжные комплектующие для автомобилей и бытовой техники из инженерных пластиков</p>
+    <div class="header-badges">
+      <span class="header-badge">⚡ Отправка за 24 часа</span>
+      <span class="header-badge">🛡️ Ударопрочные ABS / PETG / ASA</span>
+      <span class="header-badge">📐 Точная геометрия деталей</span>
+    </div>
+  </header>
 
+  <!-- ═════ ПАНЕЛЬ КАТЕГОРИЙ, ПОИСКА И ФИЛЬТРОВ ═════ -->
   <div class="filters-panel">
-    <!-- Основные вкладки -->
-    <div class="category-tabs" id="categoryTabs">
-      <button class="tab-btn active" data-tab="all" onclick="switchTab('all', this)">🛍️ Все товары</button>
-      <button class="tab-btn" data-tab="auto" onclick="switchTab('auto', this)">🚗 Автозапчасти</button>
-      <button class="tab-btn" data-tab="household" onclick="switchTab('household', this)">🏠 Бытовые товары</button>
+    <div class="controls-top">
+      <!-- Основные вкладки -->
+      <div class="category-tabs" id="categoryTabs">
+        <button class="tab-btn active" data-tab="all" onclick="switchTab('all', this)">
+          <span>🛍️ Все товары</span>
+          <span class="tab-count" id="countAll">0</span>
+        </button>
+        <button class="tab-btn" data-tab="auto" onclick="switchTab('auto', this)">
+          <span>🚗 Автозапчасти</span>
+          <span class="tab-count" id="countAuto">0</span>
+        </button>
+        <button class="tab-btn" data-tab="household" onclick="switchTab('household', this)">
+          <span>🏠 Бытовые товары</span>
+          <span class="tab-count" id="countHousehold">0</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Живой поиск и сортировка -->
+    <div class="search-sort-row">
+      <div class="search-input-wrap">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="text" id="searchInput" placeholder="Поиск по названию, марке авто, технике или кузову (напр. BMW, Granta, Dyson, Samsung)..." oninput="applyFilters()">
+        <button class="search-clear-btn" id="clearSearchBtn" onclick="clearSearch()" hidden aria-label="Очистить">✕</button>
+      </div>
+
+      <div class="sort-wrap">
+        <label for="sortSelect">Сортировка:</label>
+        <select id="sortSelect" class="sort-select" onchange="sortAndRender()">
+          <option value="default">По популярности</option>
+          <option value="price-asc">Сначала дешевле</option>
+          <option value="price-desc">Сначала дороже</option>
+          <option value="sale">Сначала со скидкой</option>
+        </select>
+      </div>
     </div>
 
     <!-- Динамические подфильтры -->
@@ -153,25 +107,54 @@
     </div>
   </div>
 
+  <!-- ═════ СТРОКА РЕЗУЛЬТАТОВ ═════ -->
   <div class="results-bar">
-    <div class="results-count">Найдено: <strong id="countVal">0</strong> товаров</div>
-    <button class="btn btn-ghost" onclick="resetFilters()">🔄 Сбросить фильтры</button>
+    <div class="results-count">Найдено позиций: <strong id="countVal">0</strong></div>
+    <button class="btn btn-ghost" onclick="resetFilters()">🔄 Сбросить все фильтры</button>
   </div>
 
+  <!-- ═════ СЕТКА ТОВАРОВ ═════ -->
   <section class="section">
     <div class="products-grid" id="productsGrid">
       <!-- Товары генерируются JS -->
     </div>
-    <div class="no-results hidden" id="noResults">😕 По вашему запросу ничего не найдено</div>
+    <div class="no-results hidden" id="noResults">
+      <div class="no-results-icon">🔍</div>
+      <div class="no-results-title">По вашему запросу ничего не найдено</div>
+      <div class="no-results-sub">Попробуйте сбросить фильтры или загрузите свою 3D-модель для расчёта печати.</div>
+      <button class="btn btn-primary" onclick="resetFilters()">Показать все товары</button>
+    </div>
   </section>
 
-  <footer class="footer">© 2026 PolyPrint 3D Studio. Все права защищены.</footer>
+  <!-- ═════ БАННЕР ИНДИВИДУАЛЬНОГО ЗАКАЗА ═════ -->
+  <div class="custom-order-cta">
+    <div class="custom-order-text">
+      <span class="section-kicker">Индивидуальное производство</span>
+      <h2>Не нашли нужную запчасть в каталоге?</h2>
+      <p>Мы изготавливаем любые редкие клипсы, шестерни, кронштейны и корпуса по вашей 3D-модели или по образцу сломанной детали.</p>
+    </div>
+    <div class="custom-order-actions">
+      <a href="upload.html" class="btn btn-accent">📐 Рассчитать STL-модель</a>
+      <a href="index.html#contacts" class="btn btn-primary">📞 Заказать по образцу</a>
+    </div>
+  </div>
 
-  <button class="cart-float" onclick="toggleCart()">🛒 Корзина <span class="cart-count" id="cartCount">0</span></button>
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="logo">3D<span>Print</span>Studio</div>
+      <div>© 2026 3D Print Studio. Все права защищены.</div>
+    </div>
+  </footer>
+
+  <!-- ═════ ПЛАВАЮЩАЯ КОРЗИНА (СИНХРОНИЗИРОВАНА С CART.HTML) ═════ -->
+  <a href="cart.html" class="cart-float" id="cartFloat">
+    <span>🛒 Корзина</span>
+    <span class="cart-count" id="cartCount">0</span>
+  </a>
 
   <script>
     /* ═══════════════════════════════════════════════════════
-       ║  РЕДАКТИРУЙТЕ СПИСКИ ТОЛЬКО ЗДЕСЬ                  ║
+       ║  РЕДАКТИРУЙТЕ СПИСКИ ТОЛЬСЬКО ЗДЕСЬ                ║
        ╚══════════════════════════════════════════════════════ */
     const FILTER_CONFIG = {
       auto: {
@@ -266,16 +249,32 @@
     ];
 
     /* ═══════════════════════════════════════════════════════
-       ║  ЛОГИКА (не трогать)                               ║
+       ║  ЛОГИКА КАТАЛОГА, ФИЛЬТРОВ И КОРЗИНЫ               ║
        ╚══════════════════════════════════════════════════════ */
-    let cart = 0;
     let currentTab = 'all';
     let activeFilters = {};
 
+    function parsePrice(str) {
+      return parseInt(String(str).replace(/\D/g, ''), 10) || 0;
+    }
+
+    function updateTabCounts() {
+      document.getElementById('countAll').textContent = PRODUCTS.length;
+      document.getElementById('countAuto').textContent = PRODUCTS.filter(p => p.category === 'auto').length;
+      document.getElementById('countHousehold').textContent = PRODUCTS.filter(p => p.category === 'household').length;
+    }
+
+    function syncBadge() {
+      const cart = JSON.parse(localStorage.getItem('pp3d_cart') || '[]');
+      const total = cart.reduce((s, i) => s + i.qty, 0);
+      document.getElementById('cartCount').textContent = total;
+    }
+
     function init() {
-      renderProducts();
+      updateTabCounts();
+      syncBadge();
       renderSubFilters();
-      applyFilters();
+      sortAndRender();
     }
 
     function switchTab(tab, btn) {
@@ -287,10 +286,45 @@
       applyFilters();
     }
 
+    function setQuickSearch(term) {
+      const input = document.getElementById('searchInput');
+      input.value = term;
+      applyFilters();
+    }
+
+    function clearSearch() {
+      const input = document.getElementById('searchInput');
+      input.value = '';
+      applyFilters();
+      input.focus();
+    }
+
     function renderSubFilters() {
       const container = document.getElementById('subFilters');
       if (currentTab === 'all') {
-        container.innerHTML = '<div style="color:var(--muted);font-size:0.95rem;width:100%;">Выберите категорию сверху, чтобы увидеть фильтры</div>';
+        container.innerHTML = `
+          <div class="filter-group filter-group-narrow">
+            <label>Фильтр по пластику</label>
+            <select onchange="onFilterChange('material', this.value)">
+              <option value="">Все материалы</option>
+              <option value="PLA">PLA</option>
+              <option value="PETG">PETG</option>
+              <option value="ABS">ABS</option>
+              <option value="ASA">ASA</option>
+              <option value="TPU">TPU</option>
+            </select>
+          </div>
+          <div class="quick-tags-bar quick-tags-wide">
+            <span class="quick-tags-label">Популярные запросы:</span>
+            <button class="quick-tag-btn" onclick="setQuickSearch('BMW')">BMW</button>
+            <button class="quick-tag-btn" onclick="setQuickSearch('LADA')">LADA</button>
+            <button class="quick-tag-btn" onclick="setQuickSearch('Toyota')">Toyota</button>
+            <button class="quick-tag-btn" onclick="setQuickSearch('Samsung')">Samsung</button>
+            <button class="quick-tag-btn" onclick="setQuickSearch('Dyson')">Dyson</button>
+            <button class="quick-tag-btn" onclick="setQuickSearch('Bosch')">Bosch</button>
+            <button class="quick-tag-btn" onclick="setQuickSearch('Xiaomi')">Xiaomi</button>
+          </div>
+        `;
         return;
       }
       const cfg = FILTER_CONFIG[currentTab];
@@ -299,7 +333,7 @@
         html += `<div class="filter-group">
           <label>${f.label}</label>
           <select onchange="onFilterChange('${f.key}', this.value)">
-            <option value="">Все</option>
+            <option value="">Все варианты</option>
             ${f.options.map(o => `<option value="${o}">${o}</option>`).join('')}
           </select>
         </div>`;
@@ -315,42 +349,88 @@
 
     function resetFilters() {
       activeFilters = {};
-      if (currentTab !== 'all') {
-        document.querySelectorAll('.sub-filters select').forEach(s => s.value = '');
+      document.getElementById('searchInput').value = '';
+      document.getElementById('sortSelect').value = 'default';
+      document.querySelectorAll('.sub-filters select').forEach(s => s.value = '');
+      sortAndRender();
+    }
+
+    function sortAndRender() {
+      const sortMode = document.getElementById('sortSelect').value;
+      const list = [...PRODUCTS];
+
+      if (sortMode === 'price-asc') {
+        list.sort((a, b) => parsePrice(a.price) - parsePrice(b.price));
+      } else if (sortMode === 'price-desc') {
+        list.sort((a, b) => parsePrice(b.price) - parsePrice(a.price));
+      } else if (sortMode === 'sale') {
+        list.sort((a, b) => (b.oldPrice ? 1 : 0) - (a.oldPrice ? 1 : 0));
       }
+
+      renderProducts(list);
       applyFilters();
     }
 
     function applyFilters() {
+      const query = document.getElementById('searchInput').value.trim().toLowerCase();
+      document.getElementById('clearSearchBtn').hidden = !query;
+
       const cards = document.querySelectorAll('.product-card');
       let visible = 0;
+
       cards.forEach(card => {
         const cat = card.dataset.category;
-        if (currentTab !== 'all' && cat !== currentTab) { card.classList.add('hidden'); return; }
+        if (currentTab !== 'all' && cat !== currentTab) {
+          card.classList.add('hidden');
+          return;
+        }
 
         let ok = true;
         for (const [key, val] of Object.entries(activeFilters)) {
-          if (card.dataset[key] !== val) { ok = false; break; }
+          if (card.dataset[key] !== val) {
+            ok = false;
+            break;
+          }
         }
+
+        if (ok && query) {
+          const searchable = card.dataset.search || '';
+          if (!searchable.includes(query)) ok = false;
+        }
+
         card.classList.toggle('hidden', !ok);
         if (ok) visible++;
       });
+
       document.getElementById('countVal').textContent = visible;
       document.getElementById('noResults').classList.toggle('hidden', visible > 0);
     }
 
-    function renderProducts() {
+    function renderProducts(list = PRODUCTS) {
       const grid = document.getElementById('productsGrid');
-      grid.innerHTML = PRODUCTS.map(p => {
+      grid.innerHTML = list.map(p => {
         const tags = (p.tags || []).map(t => `<span class="meta-chip accent">${t}</span>`).join('');
-        const price = p.oldPrice
+        const priceHtml = p.oldPrice
           ? `<span class="product-price">${p.price} <span class="old">${p.oldPrice}</span></span>`
           : `<span class="product-price">${p.price}</span>`;
-        const dataAttrs = Object.entries(p).filter(([k]) => !['name','price','oldPrice','icon','desc','tags'].includes(k))
-          .map(([k,v]) => `data-${k}="${v}"`).join(' ');
+        const catBadge = p.category === 'auto' ? '🚗 Авто' : '🏠 Быт';
+        const saleBadge = p.oldPrice ? `<span class="card-badge-sale">Выгодно</span>` : '';
 
-        return `<div class="product-card" ${dataAttrs}>
-          <div class="product-img">${p.icon}</div>
+        const dataAttrs = Object.entries(p)
+          .filter(([k]) => !['name','price','oldPrice','icon','desc','tags'].includes(k))
+          .map(([k, v]) => `data-${k}="${v}"`).join(' ');
+
+        const searchStr = [p.name, p.desc, p.brand, p.appliance, p.type, p.material, ...(p.tags || [])]
+          .filter(Boolean).join(' ').toLowerCase();
+
+        const safeName = p.name.replace(/'/g, "\\'");
+
+        return `<div class="product-card" ${dataAttrs} data-search="${searchStr}">
+          <div class="product-img">
+            <span class="card-badge-top">${catBadge}</span>
+            ${saleBadge}
+            <span class="product-emoji">${p.icon}</span>
+          </div>
           <div class="product-body">
             <div class="product-title">${p.name}</div>
             <div class="product-desc">${p.desc}</div>
@@ -361,20 +441,39 @@
               <span class="meta-chip">${p.type}</span>
               ${tags}
             </div>
-            <div class="product-footer">${price}<button class="btn btn-primary" onclick="addToCart(this)">В корзину</button></div>
+            <div class="product-footer">
+              ${priceHtml}
+              <button class="btn btn-primary" onclick="addToCart(this, '${safeName}', '${p.price}', '${p.icon}')">В корзину</button>
+            </div>
           </div>
         </div>`;
       }).join('');
     }
 
-    function addToCart(btn) {
-      cart++; document.getElementById('cartCount').textContent = cart;
-      const orig = btn.textContent; btn.textContent = '✓ Добавлено'; btn.style.background = '#2ecc71';
-      setTimeout(() => { btn.textContent = orig; btn.style.background = ''; }, 1200);
-    }
-    function toggleCart() {
-      if (cart === 0) alert('Корзина пуста. Добавьте товары из каталога!');
-      else alert('В корзине ' + cart + ' товар(ов). Переход к оформлению...');
+    function addToCart(btn, name, price, icon) {
+      let cart = JSON.parse(localStorage.getItem('pp3d_cart') || '[]');
+      const existing = cart.find(item => item.name === name);
+      if (existing) {
+        existing.qty++;
+      } else {
+        cart.push({
+          name: name,
+          price: parsePrice(price),
+          icon: icon || '📦',
+          qty: 1
+        });
+      }
+      localStorage.setItem('pp3d_cart', JSON.stringify(cart));
+
+      const orig = btn.textContent;
+      btn.textContent = '✓ Добавлено';
+      btn.style.background = '#10b981';
+      setTimeout(() => {
+        btn.textContent = orig;
+        btn.style.background = '';
+      }, 1200);
+
+      syncBadge();
     }
 
     init();

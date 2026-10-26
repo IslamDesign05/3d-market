@@ -4,75 +4,192 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Регистрация — 3D Print Studio</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <style>
-    :root { --primary: #7b2cbf; --accent: #ffca3a; --bg: #0f0f1a; --card: #1a1a2e; --text: #e8e8f0; --muted: #a0a0b8; --danger: #e74c3c; --success: #2ecc71; }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background: var(--bg); font-family: 'Inter', system-ui, sans-serif; color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
-    .nav { display: flex; align-items: center; justify-content: space-between; padding: 1.2rem 2rem; background: rgba(15,15,26,0.95); backdrop-filter: blur(12px); position: sticky; top: 0; z-index: 100; border-bottom: 1px solid rgba(123,44,191,0.3); }
-    .logo { font-size: 1.5rem; font-weight: 800; color: var(--accent); text-decoration: none; }
-    .logo span { color: var(--primary); }
-    .btn { padding: 0.7rem 1.6rem; border-radius: 10px; border: none; cursor: pointer; font-weight: 600; font-size: 0.9rem; transition: all 0.2s; font-family: inherit; text-decoration: none; display: inline-block; text-align: center; }
-    .btn-primary { background: var(--primary); color: #fff; }
-    .btn-primary:hover { background: #9b4fd9; transform: translateY(-2px); }
-    .btn-outline { background: transparent; color: var(--muted); border: 1px solid rgba(255,255,255,0.1); }
-    
-    .auth-container { flex: 1; display: flex; align-items: center; justify-content: center; padding: 2rem; }
-    .auth-card { background: var(--card); border-radius: 20px; padding: 2.5rem; width: 100%; max-width: 440px; border: 1px solid rgba(255,255,255,0.05); box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
-    .auth-card h1 { font-size: 1.6rem; margin-bottom: 0.3rem; text-align: center; }
-    .auth-card p.sub { color: var(--muted); text-align: center; margin-bottom: 1.8rem; font-size: 0.9rem; }
-    .form-group { margin-bottom: 1.1rem; }
-    .form-group label { display: block; font-size: 0.85rem; color: var(--muted); margin-bottom: 0.4rem; font-weight: 500; }
-    .form-group input { width: 100%; padding: 0.85rem 1rem; background: var(--bg); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; color: var(--text); font-size: 0.95rem; font-family: inherit; outline: none; transition: all 0.2s; }
-    .form-group input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(123,44,191,0.15); }
-    .btn-submit { width: 100%; padding: 0.9rem; margin-top: 0.5rem; }
-    .auth-footer { text-align: center; margin-top: 1.5rem; color: var(--muted); font-size: 0.9rem; }
-    .auth-footer a { color: var(--accent); text-decoration: none; font-weight: 600; }
-    .error-msg { background: rgba(231,76,60,0.1); border: 1px solid rgba(231,76,60,0.3); color: var(--danger); padding: 0.8rem; border-radius: 10px; margin-bottom: 1rem; font-size: 0.85rem; display: none; }
-    @media (max-width: 640px) { .auth-card { padding: 1.5rem; } }
-  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="register.css">
 </head>
 <body>
 
+  <!-- Фоновая технологичная сетка -->
+  <div class="bg-grid" aria-hidden="true"></div>
+
+  <!-- ═════ НАВИГАЦИЯ (КАК НА INDEX.HTML И PRODUCTS.HTML) ═════ -->
   <nav class="nav">
-    <a href="index.html" class="logo">3D<span>Print</span>Studio</a>
-    <a href="index.html" class="btn btn-outline">← На главную</a>
+    <a href="index.html" class="logo">
+      <span class="badge-icon">◈</span>
+      3D<span>Print</span>Studio
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html">Главная</a></li>
+      <li><a href="products.html">Товары</a></li>
+      <li><a href="upload.html">Калькулятор</a></li>
+      <li><a href="index.html#services">Услуги и ремонт</a></li>
+      <li><a href="index.html#contacts">Контакты</a></li>
+    </ul>
+    <div class="nav-auth" id="navAuth">
+      <a href="login.html" class="btn-login">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+          <circle cx="12" cy="7" r="4"></circle>
+        </svg>
+        <span>Войти</span>
+      </a>
+      <a href="index.html" class="btn-back">
+        <span>← На главную</span>
+      </a>
+    </div>
   </nav>
 
-  <div class="auth-container">
-    <div class="auth-card">
-      <h1>🚀 Создать аккаунт</h1>
-      <p class="sub">Быстрая регистрация за 30 секунд</p>
+  <!-- ═════ СЕКЦИЯ РЕГИСТРАЦИИ ═════ -->
+  <main class="auth-container">
+    <div class="auth-wrapper">
 
-      <div class="error-msg" id="errorBox"></div>
+      <!-- Левая панель: Преимущества аккаунта -->
+      <div class="auth-Promo">
+        <span class="section-kicker">Клиентский сервис</span>
+        <h2>Личный кабинет <span>3D Print Studio</span></h2>
+        <p class="promo-desc">Управляйте своими заказами, сохраняйте 3D-модели и получайте персональные скидки на печать.</p>
 
-      <div class="form-group">
-        <label>Имя</label>
-        <input type="text" id="name" placeholder="Иван">
-      </div>
-      <div class="form-group">
-        <label>Email</label>
-        <input type="email" id="email" placeholder="you@example.com">
-      </div>
-      <div class="form-group">
-        <label>Телефон</label>
-        <input type="tel" id="phone" placeholder="+7 (999) 123-45-67">
-      </div>
-      <div class="form-group">
-        <label>Пароль</label>
-        <input type="password" id="password" placeholder="Минимум 6 символов">
+        <div class="promo-features">
+          <div class="promo-item">
+            <div class="promo-icon">📐</div>
+            <div>
+              <div class="promo-item-title">Архив ваших 3D-моделей</div>
+              <div class="promo-item-text">Быстрый повторный заказ ранее рассчитанных STL и OBJ файлов.</div>
+            </div>
+          </div>
+          <div class="promo-item">
+            <div class="promo-icon">🚚</div>
+            <div>
+              <div class="promo-item-title">Статус печати и трек-номера</div>
+              <div class="promo-item-text">Отслеживайте этапы производства и доставки СДЭК / Почтой онлайн.</div>
+            </div>
+          </div>
+          <div class="promo-item">
+            <div class="promo-icon">⚡</div>
+            <div>
+              <div class="promo-item-title">Оформление заказа в 1 клик</div>
+              <div class="promo-item-text">Ваши контактные данные и адрес доставки сохраняются автоматически.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="promo-footer-badge">
+          <span class="pulse-dot"></span>
+          <span>Безопасное хранение данных • Махачкала и вся РФ</span>
+        </div>
       </div>
 
-      <button class="btn btn-primary btn-submit" onclick="handleRegister()">Зарегистрироваться</button>
+      <!-- Правая панель: Форма регистрации -->
+      <div class="auth-card">
+        <div class="auth-card-header">
+          <div class="auth-icon-badge">🚀</div>
+          <h1>Создать аккаунт</h1>
+          <p class="sub">Быстрая регистрация за 30 секунд</p>
+        </div>
 
-      <div class="auth-footer">
-        Уже есть аккаунт? <a href="login.html">Войти</a>
+        <div class="error-msg" id="errorBox"></div>
+
+        <div class="form-group">
+          <label for="name">Ваше имя</label>
+          <div class="input-wrap">
+            <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            <input type="text" id="name" placeholder="Иван Иванов" autocomplete="name">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Электронная почта (Email)</label>
+          <div class="input-wrap">
+            <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+              <polyline points="22,6 12,13 2,6"></polyline>
+            </svg>
+            <input type="email" id="email" placeholder="you@example.com" autocomplete="email">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="phone">Номер телефона</label>
+          <div class="input-wrap">
+            <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+            </svg>
+            <input type="tel" id="phone" placeholder="+7 (999) 123-45-67" autocomplete="tel">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Пароль</label>
+          <div class="input-wrap">
+            <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+            <input type="password" id="password" placeholder="Минимум 6 символов" oninput="updatePasswordStrength(this.value)" autocomplete="new-password">
+            <button type="button" class="toggle-pass-btn" onclick="togglePassword()" aria-label="Показать пароль" id="togglePassBtn">👁️</button>
+          </div>
+          <!-- Индикатор надежности пароля -->
+          <div class="pass-strength" id="passStrength">
+            <div class="pass-bar" id="passBar"></div>
+          </div>
+        </div>
+
+        <button class="btn btn-primary btn-submit" onclick="handleRegister()">
+          <span>Зарегистрироваться</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </button>
+
+        <div class="auth-footer">
+          Уже есть аккаунт? <a href="login.html">Войти в профиль</a>
+        </div>
       </div>
+
     </div>
-  </div>
+  </main>
+
+  <footer class="footer">
+    © 2026 3D Print Studio. Все права защищены.
+  </footer>
 
   <script src="auth.js"></script>
   <script>
+    function togglePassword() {
+      const passInput = document.getElementById('password');
+      const btn = document.getElementById('togglePassBtn');
+      if (passInput.type === 'password') {
+        passInput.type = 'text';
+        btn.textContent = '🙈';
+      } else {
+        passInput.type = 'password';
+        btn.textContent = '👁️';
+      }
+    }
+
+    function updatePasswordStrength(val) {
+      const bar = document.getElementById('passBar');
+      if (!val) {
+        bar.style.width = '0%';
+        bar.style.background = 'transparent';
+        return;
+      }
+      if (val.length < 6) {
+        bar.style.width = '35%';
+        bar.style.background = '#e74c3c';
+      } else if (val.length < 9) {
+        bar.style.width = '70%';
+        bar.style.background = '#ffca3a';
+      } else {
+        bar.style.width = '100%';
+        bar.style.background = '#10b981';
+      }
+    }
+
     function handleRegister() {
       const name = document.getElementById('name').value.trim();
       const email = document.getElementById('email').value.trim();
@@ -80,15 +197,30 @@
       const password = document.getElementById('password').value;
       const err = document.getElementById('errorBox');
 
-      if (!name || !email || !phone || !password) { err.textContent = 'Заполните все поля'; err.style.display = 'block'; return; }
-      if (password.length < 6) { err.textContent = 'Пароль должен быть не менее 6 символов'; err.style.display = 'block'; return; }
+      if (!name || !email || !phone || !password) {
+        err.textContent = '⚠️ Пожалуйста, заполните все поля';
+        err.style.display = 'block';
+        return;
+      }
+      if (password.length < 6) {
+        err.textContent = '⚠️ Пароль должен быть не менее 6 символов';
+        err.style.display = 'block';
+        return;
+      }
 
       const res = AUTH.register(name, email, phone, password);
-      if (!res.ok) { err.textContent = res.error; err.style.display = 'block'; return; }
+      if (!res.ok) {
+        err.textContent = '⚠️ ' + res.error;
+        err.style.display = 'block';
+        return;
+      }
 
       window.location.href = 'profile.html';
     }
-    document.addEventListener('keydown', e => { if (e.key === 'Enter') handleRegister(); });
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Enter') handleRegister();
+    });
   </script>
 </body>
 </html>

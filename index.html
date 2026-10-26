@@ -3,209 +3,984 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>3D Print Studio — Студия 3D-печати</title>
+  <title>3D Print Studio — Студия 3D-печати и сервиса</title>
   <script src="auth.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <style>
-    :root { --primary: #7b2cbf; --accent: #ffca3a; --bg: #0f0f1a; --card: #1a1a2e; --card-hover: #252540; --text: #e8e8f0; --muted: #a0a0b8; }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background: var(--bg); font-family: 'Inter', system-ui, sans-serif; color: var(--text); }
-    .nav { display: flex; align-items: center; justify-content: space-between; padding: 1.2rem 2rem; background: rgba(15,15,26,0.85); backdrop-filter: blur(12px); position: sticky; top: 0; z-index: 100; border-bottom: 1px solid rgba(123,44,191,0.2); }
-    .logo { font-size: 1.5rem; font-weight: 800; color: var(--accent); letter-spacing: -0.5px; text-decoration: none; }
-    .logo span { color: var(--primary); }
-    .nav-links { display: flex; gap: 2rem; list-style: none; }
-    .nav-links a { color: var(--muted); text-decoration: none; font-weight: 500; transition: color 0.2s; }
-    .nav-links a:hover, .nav-links a.active { color: var(--accent); }
-    .btn { padding: 0.6rem 1.4rem; border-radius: 10px; border: none; cursor: pointer; font-weight: 600; font-size: 0.95rem; transition: all 0.2s; font-family: inherit; text-decoration: none; display: inline-block; }
-    .btn-primary { background: var(--primary); color: #fff; }
-    .btn-primary:hover { background: #9b4fd9; transform: translateY(-2px); }
-    .btn-accent { background: var(--accent); color: #1a1a2e; }
-    .btn-accent:hover { background: #ffe082; transform: translateY(-2px); }
-    .hero { display: flex; align-items: center; justify-content: center; flex-direction: column; text-align: center; padding: 5rem 2rem 4rem; background: radial-gradient(ellipse at 50% 0%, rgba(123,44,191,0.15) 0%, transparent 60%); }
-    .hero h1 { font-size: 3.2rem; font-weight: 800; line-height: 1.1; margin-bottom: 1rem; }
-    .hero h1 .accent { color: var(--accent); }
-    .hero p { color: var(--muted); font-size: 1.15rem; max-width: 560px; margin-bottom: 2rem; }
-    .hero-badges { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; margin-bottom: 2rem; }
-    .badge { padding: 0.4rem 1rem; border-radius: 999px; font-size: 0.85rem; font-weight: 600; background: rgba(123,44,191,0.15); color: var(--primary); border: 1px solid rgba(123,44,191,0.3); }
-    .section { max-width: 1200px; margin: 0 auto; padding: 3rem 2rem; }
-    .section-title { font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; text-align: center; }
-    .section-sub { color: var(--muted); text-align: center; margin-bottom: 2.5rem; }
-    .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
-    .product-card { background: var(--card); border-radius: 16px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); transition: all 0.3s; display: flex; flex-direction: column; }
-    .product-card:hover { transform: translateY(-6px); border-color: rgba(123,44,191,0.4); box-shadow: 0 20px 40px rgba(123,44,191,0.15); }
-    .product-img { height: 180px; background: linear-gradient(135deg, rgba(123,44,191,0.3), rgba(255,202,58,0.15)); display: flex; align-items: center; justify-content: center; font-size: 3.5rem; }
-    .product-body { padding: 1.2rem; flex: 1; display: flex; flex-direction: column; }
-    .product-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.4rem; }
-    .product-desc { color: var(--muted); font-size: 0.9rem; margin-bottom: 1rem; flex: 1; }
-    .product-footer { display: flex; align-items: center; justify-content: space-between; }
-    .product-price { font-size: 1.2rem; font-weight: 800; color: var(--accent); }
-    .services { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.2rem; margin-top: 1rem; }
-    .service-card { background: var(--card); border-radius: 14px; padding: 1.5rem; border: 1px solid rgba(255,255,255,0.05); text-align: center; transition: all 0.3s; }
-    .service-card:hover { border-color: rgba(255,202,58,0.3); transform: translateY(-4px); }
-    .service-icon { font-size: 2.5rem; margin-bottom: 0.8rem; }
-    .service-title { font-weight: 700; margin-bottom: 0.4rem; }
-    .service-desc { color: var(--muted); font-size: 0.9rem; }
-    .cta-section { background: linear-gradient(135deg, rgba(123,44,191,0.2), rgba(255,202,58,0.1)); border-radius: 20px; padding: 3rem 2rem; text-align: center; margin: 3rem auto; max-width: 800px; border: 1px solid rgba(123,44,191,0.2); }
-    .cta-section h2 { font-size: 1.8rem; margin-bottom: 0.8rem; }
-    .cta-section p { color: var(--muted); margin-bottom: 1.5rem; }
-    .footer { text-align: center; padding: 2rem; color: var(--muted); font-size: 0.9rem; border-top: 1px solid rgba(255,255,255,0.05); margin-top: 2rem; }
-    .cart-float { position: fixed; bottom: 1.5rem; right: 1.5rem; background: var(--primary); color: #fff; padding: 0.9rem 1.4rem; border-radius: 50px; font-weight: 700; box-shadow: 0 8px 24px rgba(123,44,191,0.4); cursor: pointer; z-index: 200; display: flex; align-items: center; gap: 0.5rem; transition: all 0.2s; border: none; font-family: inherit; font-size: 1rem; text-decoration: none; }
-    .cart-float:hover { transform: scale(1.05); }
-    .cart-count { background: var(--accent); color: #1a1a2e; border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; }
-    @media (max-width: 640px) { .hero h1 { font-size: 2rem; } .nav-links { display: none; } }
-  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
+  <!-- Фоновая технологичная сетка -->
+  <div class="bg-grid" aria-hidden="true"></div>
+
+  <!-- ═════ НАВИГАЦИЯ ═════ -->
   <nav class="nav">
-  <a href="index.html" class="logo">3D<span>Print</span>Studio</a>
-  <ul class="nav-links">
-    <li><a href="index.html">Главная</a></li>
-    <li><a href="products.html">Товары</a></li>
-    <li><a href="upload.html">Калькулятор</a></li>
-    <li><a href="index.html#contacts">Контакты</a></li>
-  </ul>
-  <!-- ВОТ ЭТОТ БЛОК: -->
-  <div style="display:flex;align-items:center;gap:0.6rem;" id="navAuth"></div>
-</nav>
-
-  <section class="hero" id="home">
-    <div class="hero-badges">
-      <span class="badge">FDM печать</span>
-      <span class="badge">SLA / Resin</span>
-      <span class="badge">Моделирование</span>
+    <a href="index.html" class="logo">
+      <span class="badge-icon">◈</span>
+      3D<span>Print</span>Studio
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html" class="active">Главная</a></li>
+      <li><a href="products.html">Товары</a></li>
+      <li><a href="upload.html">Калькулятор</a></li>
+      <li><a href="#services">Услуги и ремонт</a></li>
+      <li><a href="#contacts">Контакты</a></li>
+    </ul>
+    <div class="nav-auth" id="navAuth">
+      <a href="login.html" class="btn-login">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+          <circle cx="12" cy="7" r="4"></circle>
+        </svg>
+        <span>Войти</span>
+      </a>
+      <a href="register.html" class="btn-register">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+          <circle cx="8.5" cy="7" r="4"></circle>
+          <line x1="20" y1="8" x2="20" y2="14"></line>
+          <line x1="23" y1="11" x2="17" y2="11"></line>
+        </svg>
+        <span>Регистрация</span>
+      </a>
     </div>
-    <h1>Воплощаем идеи <br>в <span class="accent">реальность</span></h1>
-    <p>Профессиональная 3D-печать любой сложности: от прототипов до готовых изделий. Быстро, качественно, с доставкой.</p>
-    <div style="display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;">
-      <a href="products.html" class="btn btn-accent" style="font-size:1rem;padding:0.8rem 2rem;">Посмотреть товары</a>
-      <a href="upload.html" class="btn btn-primary" style="font-size:1rem;padding:0.8rem 2rem;">Загрузить 3D-модель</a>
-    </div>
-  </section>
+  </nav>
 
-  <section class="section" id="products">
-    <h2 class="section-title">Готовые товары</h2>
-    <p class="section-sub">Выбирайте из нашего каталога или закажите печать по своей модели</p>
-    <div class="products-grid">
-      <div class="product-card">
-        <div class="product-img">🐉</div>
-        <div class="product-body">
-          <div class="product-title">Дракон-артикулятор</div>
-          <div class="product-desc">Подвижная фигурка дракона с шарнирами. PLA, 25 см.</div>
-          <div class="product-footer"><span class="product-price">1 290 ₽</span><button class="btn btn-primary" onclick="addToCart(this, 'Дракон-артикулятор', '1290', '🐉')">В корзину</button></div>
-        </div>
-      </div>
-      <div class="product-card">
-        <div class="product-img">🧩</div>
-        <div class="product-body">
-          <div class="product-title">Головоломка Куб</div>
-          <div class="product-desc">Механическая головоломка с 6 степенями свободы. PETG.</div>
-          <div class="product-footer"><span class="product-price">890 ₽</span><button class="btn btn-primary" onclick="addToCart(this, 'Головоломка Куб', '890', '🧩')">В корзину</button></div>
-        </div>
-      </div>
-      <div class="product-card">
-        <div class="product-img">🌿</div>
-        <div class="product-body">
-          <div class="product-title">Подставка для растений</div>
-          <div class="product-desc">Минималистичная подставка в стиле бионика. PLA дерево.</div>
-          <div class="product-footer"><span class="product-price">650 ₽</span><button class="btn btn-primary" onclick="addToCart(this, 'Подставка для растений', '650', '🌿')">В корзину</button></div>
-        </div>
-      </div>
-      <div class="product-card">
-        <div class="product-img">🎧</div>
-        <div class="product-body">
-          <div class="product-title">Подставка для наушников</div>
-          <div class="product-desc">Эргономичная подставка для наушников. Матовый PLA.</div>
-          <div class="product-footer"><span class="product-price">490 ₽</span><button class="btn btn-primary" onclick="addToCart(this, 'Подставка для наушников', '490', '🎧')">В корзину</button></div>
-        </div>
-      </div>
-      <div class="product-card">
-        <div class="product-img">🗝️</div>
-        <div class="product-body">
-          <div class="product-title">Брелок с именем</div>
-          <div class="product-desc">Персонализированный брелок с вашим именем. 3 цвета на выбор.</div>
-          <div class="product-footer"><span class="product-price">350 ₽</span><button class="btn btn-primary" onclick="addToCart(this, 'Брелок с именем', '350', '🗝️')">В корзину</button></div>
-        </div>
-      </div>
-      <div class="product-card">
-        <div class="product-img">🤖</div>
-        <div class="product-body">
-          <div class="product-title">Робот-конструктор</div>
-          <div class="product-desc">Набор для сборки мини-робота. 45 деталей, инструкция included.</div>
-          <div class="product-footer"><span class="product-price">1 790 ₽</span><button class="btn btn-primary" onclick="addToCart(this, 'Робот-конструктор', '1790', '🤖')">В корзину</button></div>
-        </div>
-      </div>
-    </div>
-  </section>
+  <!-- ═════ HERO SLIDER (6 СЛАЙДОВ) ═════ -->
+  <div class="hero-slider-wrap" id="heroSliderWrap">
+    <div class="hero-slider" id="heroSlider">
 
-  <section class="section" id="services">
-    <h2 class="section-title">Наши услуги</h2>
-    <p class="section-sub">Полный цикл 3D-производства под ключ</p>
-    <div class="services">
-      <div class="service-card"><div class="service-icon">🖨️</div><div class="service-title">FDM печать</div><div class="service-desc">PLA, PETG, ABS, TPU. От 5 ₽/г. Срок от 2 часов.</div></div>
-      <div class="service-card"><div class="service-icon">💧</div><div class="service-title">SLA / Resin</div><div class="service-desc">Фотополимерная печать. Детализация до 25 мкм.</div></div>
-      <div class="service-card"><div class="service-icon">🎨</div><div class="service-title">3D-моделирование</div><div class="service-desc">Создание моделей с нуля по эскизам и ТЗ.</div></div>
-      <div class="service-card"><div class="service-icon">🔧</div><div class="service-title">Постобработка</div><div class="service-desc">Шлифовка, покраска, сборка. Готовое изделие.</div></div>
-    </div>
-  </section>
+      <!-- Клон последнего (Слайд 6: Доставка — для infinite loop назад) -->
+      <div class="hero-slide">
+        <img class="hero-slide-img" src="https://images.pexels.com/photos/7362897/pexels-photo-7362897.jpeg?auto=compress&cs=tinysrgb&w=1920" alt="Курьер расписывается в получении посылки" draggable="false" onerror="this.hidden=true">
+        <div class="hero-badges">
+          <span class="badge">По всей России</span>
+          <span class="badge">1–3 дня</span>
+          <span class="badge">Трек-номер</span>
+        </div>
+        <h1>Доставка <br>в любую <span class="accent">точку</span></h1>
+        <p>СДЭК, Почта России, курьер по Москве или самовывоз из студии в Махачкале.</p>
+        <div class="hero-actions">
+          <a href="cart.html" class="btn btn-accent btn-lg">Оформить заказ</a>
+        </div>
+      </div>
 
-  <div class="cta-section">
-    <h2>Есть своя 3D-модель?</h2>
-    <p>Загрузите файл и получите расчёт стоимости и сроков печати за 10 минут. Поддерживаем STL, OBJ, 3MF, STEP.</p>
-    <a href="upload.html" class="btn btn-accent" style="font-size:1rem;padding:0.8rem 2rem;">Рассчитать стоимость</a>
+      <!-- Слайд 1: Главный -->
+      <div class="hero-slide">
+        <img class="hero-slide-img" src="https://images.unsplash.com/photo-1644936580583-91eb0c32c3db?auto=format&fit=crop&w=1920&q=75" alt="3D-принтер печатает деталь жёлтым PLA-пластиком" draggable="false" onerror="this.hidden=true">
+        <div class="hero-badges">
+          <span class="badge">FDM печать</span>
+          <span class="badge">SLA / Resin</span>
+          <span class="badge">Моделирование</span>
+        </div>
+        <h1>Воплощаем идеи <br>в <span class="accent">реальность</span></h1>
+        <p>Профессиональная 3D-печать любой сложности: от прототипов до готовых изделий. Быстро, качественно, с доставкой.</p>
+        <div class="hero-actions">
+          <a href="products.html" class="btn btn-accent btn-lg">Посмотреть товары</a>
+          <a href="upload.html" class="btn btn-primary btn-lg">Загрузить 3D-модель</a>
+        </div>
+      </div>
+
+      <!-- Слайд 2: Авто (ВАШЕ ЗАГРУЖЕННОЕ ФОТО) -->
+      <div class="hero-slide">
+        <img class="hero-slide-img hero-slide-img--auto" src="images/auto-slide.jpg" alt="Автомобиль с кастомным 3D-печатным бампером и чертежами в мастерской" draggable="false" onerror="if(!this.dataset.fallback){this.dataset.fallback='1';this.src='auto-slide.jpg';}else{this.hidden=true;}">
+        <div class="hero-badges">
+          <span class="badge">LADA</span>
+          <span class="badge">BMW</span>
+          <span class="badge">Toyota</span>
+        </div>
+        <h1>Запчасти для <br><span class="accent">автомобилей</span></h1>
+        <p>Клипсы, крепления, крышки, элементы интерьера и обвеса под любую марку. Печатаем из термостойких ABS, PETG и ASA.</p>
+        <div class="hero-actions">
+          <a href="products.html" class="btn btn-accent btn-lg">Автокаталог</a>
+          <a href="upload.html" class="btn btn-primary btn-lg">Заказать печать</a>
+        </div>
+      </div>
+
+      <!-- Слайд 3: Быт -->
+      <div class="hero-slide">
+        <img class="hero-slide-img" src="https://images.unsplash.com/photo-1703720675167-2fba006efb82?auto=format&fit=crop&w=1920&q=75" alt="3D-принтер печатает небольшую пластиковую деталь-замену" draggable="false" onerror="this.hidden=true">
+        <div class="hero-badges">
+          <span class="badge">Холодильники</span>
+          <span class="badge">Пылесосы</span>
+          <span class="badge">Кофемашины</span>
+        </div>
+        <h1>Ремонт <br><span class="accent">бытовой техники</span></h1>
+        <p>Ручки, шестерни, кнопки, крепления и корпуса. Не выбрасывайте технику — восстановим сломанную деталь за 24 часа.</p>
+        <div class="hero-actions">
+          <a href="products.html" class="btn btn-accent btn-lg">Бытовой каталог</a>
+          <a href="upload.html" class="btn btn-primary btn-lg">Загрузить модель</a>
+        </div>
+      </div>
+
+      <!-- Слайд 4: Калькулятор -->
+      <div class="hero-slide">
+        <img class="hero-slide-img" src="https://images.unsplash.com/photo-1760446411816-f5484549fb51?auto=format&fit=crop&w=1920&q=75" alt="Пользователь достаёт готовую фигурку из 3D-принтера" draggable="false" onerror="this.hidden=true">
+        <div class="hero-badges">
+          <span class="badge">STL / OBJ</span>
+          <span class="badge">Расчёт за 10 сек</span>
+          <span class="badge">6 материалов</span>
+        </div>
+        <h1>Расчёт стоимости <br><span class="accent">онлайн</span></h1>
+        <p>Загрузите 3D-модель, выберите материал и параметры печати. Узнайте точную цену и вес изделия мгновенно.</p>
+        <div class="hero-actions">
+          <a href="upload.html" class="btn btn-accent btn-lg">Рассчитать цену</a>
+        </div>
+      </div>
+
+      <!-- Слайд 5: Ремонт и доработка 3D-принтеров -->
+      <div class="hero-slide">
+        <img class="hero-slide-img" src="https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=1920&q=75" alt="Инженер настраивает и модернизирует 3D-принтер" draggable="false" onerror="this.hidden=true">
+        <div class="hero-badges">
+          <span class="badge">Старого и нового образца</span>
+          <span class="badge">Апгрейд и Klipper</span>
+          <span class="badge">Гарантия на работы</span>
+        </div>
+        <h1>Ремонт и доработка <br><span class="accent">3D-принтеров</span></h1>
+        <p>Профессиональное ТО, восстановление и модернизация 3D-принтеров любого поколения — от классических систем до скоростных новинок.</p>
+        <div class="hero-actions">
+          <a href="#contacts" class="btn btn-accent btn-lg">Записаться на сервис</a>
+          <a href="#services" class="btn btn-primary btn-lg">Подробнее об услуге</a>
+        </div>
+      </div>
+
+      <!-- Слайд 6: Доставка -->
+      <div class="hero-slide">
+        <img class="hero-slide-img" src="https://images.pexels.com/photos/7362897/pexels-photo-7362897.jpeg?auto=compress&cs=tinysrgb&w=1920" alt="Курьер расписывается в получении посылки" draggable="false" onerror="this.hidden=true">
+        <div class="hero-badges">
+          <span class="badge">По всей России</span>
+          <span class="badge">1–3 дня</span>
+          <span class="badge">Трек-номер</span>
+        </div>
+        <h1>Доставка <br>в любую <span class="accent">точку</span></h1>
+        <p>СДЭК, Почта России, курьер по Москве или самовывоз из студии в Махачкале.</p>
+        <div class="hero-actions">
+          <a href="cart.html" class="btn btn-accent btn-lg">Оформить заказ</a>
+        </div>
+      </div>
+
+      <!-- Клон первого (для infinite loop вперёд) -->
+      <div class="hero-slide">
+        <img class="hero-slide-img" src="https://images.unsplash.com/photo-1644936580583-91eb0c32c3db?auto=format&fit=crop&w=1920&q=75" alt="3D-принтер печатает деталь жёлтым PLA-пластиком" draggable="false" onerror="this.hidden=true">
+        <div class="hero-badges">
+          <span class="badge">FDM печать</span>
+          <span class="badge">SLA / Resin</span>
+          <span class="badge">Моделирование</span>
+        </div>
+        <h1>Воплощаем идеи <br>в <span class="accent">реальность</span></h1>
+        <p>Профессиональная 3D-печать любой сложности: от прототипов до готовых изделий. Быстро, качественно, с доставкой.</p>
+        <div class="hero-actions">
+          <a href="products.html" class="btn btn-accent btn-lg">Посмотреть товары</a>
+          <a href="upload.html" class="btn btn-primary btn-lg">Загрузить 3D-модель</a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Стрелки -->
+    <button class="hero-arrow prev" onclick="moveSlide(-1)" aria-label="Назад">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+    </button>
+    <button class="hero-arrow next" onclick="moveSlide(1)" aria-label="Вперёд">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+    </button>
+
+    <div class="hero-counter" aria-hidden="true"><b id="heroCurrent">01</b><span>/ 06</span></div>
   </div>
 
-  <section class="section" id="contacts" style="text-align:center;">
-    <h2 class="section-title">Контакты</h2>
-    <p class="section-sub">Мы всегда на связи</p>
-    <div style="display:flex;gap:2rem;justify-content:center;flex-wrap:wrap;margin-top:1rem;">
-      <div style="color:var(--muted);"><div style="font-weight:700;color:var(--text);margin-bottom:0.3rem;">📍 Адрес</div><div>г. Махачкала, ул. Гапцахская, 5</div></div>
-      <div style="color:var(--muted);"><div style="font-weight:700;color:var(--text);margin-bottom:0.3rem;">📞 Телефон</div><div>+7 (928) 969-99-85</div></div>
-      <div style="color:var(--muted);"><div style="font-weight:700;color:var(--text);margin-bottom:0.3rem;">✉️ Email</div><div>3dprint-05@mail.ru</div></div>
+  <!-- Точки (6 слайдов) -->
+  <div class="hero-dots" id="heroDots">
+    <button class="dot active" onclick="goToSlide(0)" aria-label="Слайд 1"></button>
+    <button class="dot" onclick="goToSlide(1)" aria-label="Слайд 2"></button>
+    <button class="dot" onclick="goToSlide(2)" aria-label="Слайд 3"></button>
+    <button class="dot" onclick="goToSlide(3)" aria-label="Слайд 4"></button>
+    <button class="dot" onclick="goToSlide(4)" aria-label="Слайд 5"></button>
+    <button class="dot" onclick="goToSlide(5)" aria-label="Слайд 6"></button>
+  </div>
+
+  <!-- ═════ ПАНЕЛЬ ПРЕИМУЩЕСТВ (STATS BAR) ═════ -->
+  <div class="stats-bar">
+    <div class="stat-item">
+      <span class="stat-value">25 мкм</span>
+      <span class="stat-label">Максимальная точность</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-value">от 2 часов</span>
+      <span class="stat-label">Срочная печать и сервис</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-value">10+ видов</span>
+      <span class="stat-label">Инженерных пластиков и смол</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-value">100%</span>
+      <span class="stat-label">Контроль геометрии и ОТК</span>
+    </div>
+  </div>
+
+  <!-- ═════ ТОВАРЫ + ОБЛЕГЧЁННЫЙ ПОИСК ═════ -->
+  <section class="section" id="products">
+    <div class="section-header">
+      <span class="section-kicker">Каталог изделий</span>
+      <h2 class="section-title">Готовые товары</h2>
+      <p class="section-sub">Выбирайте из нашего каталога, воспользуйтесь быстрым поиском или закажите печать своей модели</p>
+    </div>
+
+    <!-- Умная панель поиска и фильтрации -->
+    <div class="catalog-toolbar">
+      <div class="search-box">
+        <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="text" id="catalogSearch" placeholder="Быстрый поиск: например, дракон, подставка, PLA, подарок..." autocomplete="off">
+        <button class="search-clear" id="searchClear" hidden aria-label="Очистить">✕</button>
+      </div>
+      <div class="filter-pills" id="filterPills">
+        <button class="filter-pill active" data-filter="all">Все товары</button>
+        <button class="filter-pill" data-filter="toys">Фигурки и игры</button>
+        <button class="filter-pill" data-filter="home">Для дома и офиса</button>
+        <button class="filter-pill" data-filter="gift">Сувениры</button>
+      </div>
+    </div>
+
+    <div class="products-grid" id="productsGrid">
+      <div class="product-card" data-category="toys" data-title="Дракон-артикулятор" data-keywords="дракон фигурка игрушка шарниры pla подарок">
+        <div class="product-img">
+          <span class="product-tag">Хит продаж</span>
+          🐉
+          <img class="product-photo" src="images/products/dragon-articulated.jpg" alt="Подвижный дракон-артикулятор, напечатанный на 3D-принтере" loading="lazy" draggable="false" onerror="this.hidden=true">
+        </div>
+        <div class="product-body">
+          <div class="product-title">Дракон-артикулятор</div>
+          <div class="product-desc">Подвижная фигурка дракона с шарнирами. Шелковый PLA, длина 25 см.</div>
+          <div class="product-footer">
+            <span class="product-price">1 290 ₽</span>
+            <button class="btn btn-primary" onclick="addToCart(this, 'Дракон-артикулятор', '1290', '🐉')">В корзину</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card" data-category="toys" data-title="Головоломка Куб" data-keywords="головоломка куб лабиринт механика petg игра">
+        <div class="product-img">
+          <span class="product-tag">PETG</span>
+          🧩
+          <img class="product-photo" src="images/products/puzzle-cube.jpg" alt="Механическая головоломка-куб из PETG" loading="lazy" draggable="false" onerror="this.hidden=true">
+        </div>
+        <div class="product-body">
+          <div class="product-title">Головоломка Куб</div>
+          <div class="product-desc">Механическая головоломка с 6 степенями свободы. Ударопрочный PETG.</div>
+          <div class="product-footer">
+            <span class="product-price">890 ₽</span>
+            <button class="btn btn-primary" onclick="addToCart(this, 'Головоломка Куб', '890', '🧩')">В корзину</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card" data-category="home" data-title="Подставка для растений" data-keywords="подставка цветы растения кашпо горшок дом дерево">
+        <div class="product-img">
+          <span class="product-tag">Эко Wood</span>
+          🌿
+          <img class="product-photo" src="images/products/plant-stand.jpg" alt="Подставка для растений в стиле бионика" loading="lazy" draggable="false" onerror="this.hidden=true">
+        </div>
+        <div class="product-body">
+          <div class="product-title">Подставка для растений</div>
+          <div class="product-desc">Минималистичная подставка в стиле бионика. Композитный PLA с волокнами дерева.</div>
+          <div class="product-footer">
+            <span class="product-price">650 ₽</span>
+            <button class="btn btn-primary" onclick="addToCart(this, 'Подставка для растений', '650', '🌿')">В корзину</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card" data-category="home" data-title="Подставка для наушников" data-keywords="подставка наушники стол гейминг офис пк pla">
+        <div class="product-img">
+          <span class="product-tag">Для ПК</span>
+          🎧
+          <img class="product-photo" src="images/products/headphone-stand.jpg" alt="Подставка для наушников из матового PLA" loading="lazy" draggable="false" onerror="this.hidden=true">
+        </div>
+        <div class="product-body">
+          <div class="product-title">Подставка для наушников</div>
+          <div class="product-desc">Эргономичная настольная стойка под любые полноразмерные наушники. Матовый PLA.</div>
+          <div class="product-footer">
+            <span class="product-price">490 ₽</span>
+            <button class="btn btn-primary" onclick="addToCart(this, 'Подставка для наушников', '490', '🎧')">В корзину</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card" data-category="gift" data-title="Брелок с именем" data-keywords="брелок ключи имя подарок сувенир надпись">
+        <div class="product-img">
+          <span class="product-tag">Кастом</span>
+          🗝️
+          <img class="product-photo" src="images/products/keychain.jpg" alt="Персонализированный брелок с именем" loading="lazy" draggable="false" onerror="this.hidden=true">
+        </div>
+        <div class="product-body">
+          <div class="product-title">Брелок с именем</div>
+          <div class="product-desc">Персонализированный двухцветный брелок с вашим именем или логотипом.</div>
+          <div class="product-footer">
+            <span class="product-price">350 ₽</span>
+            <button class="btn btn-primary" onclick="addToCart(this, 'Брелок с именем', '350', '🗝️')">В корзину</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card" data-category="toys" data-title="Робот-конструктор" data-keywords="робот конструктор набор сборка детали подарок">
+        <div class="product-img">
+          <span class="product-tag">45 деталей</span>
+          🤖
+          <img class="product-photo" src="images/products/robot-kit.jpg" alt="Набор для сборки мини-робота" loading="lazy" draggable="false" onerror="this.hidden=true">
+        </div>
+        <div class="product-body">
+          <div class="product-title">Робот-конструктор</div>
+          <div class="product-desc">Набор для сборки подвижного мини-робота. 45 деталей, инструкция в комплекте.</div>
+          <div class="product-footer">
+            <span class="product-price">1 790 ₽</span>
+            <button class="btn btn-primary" onclick="addToCart(this, 'Робот-конструктор', '1790', '🤖')">В корзину</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Сообщение, если ничего не найдено -->
+    <div class="empty-search" id="emptySearch" hidden>
+      <div class="empty-search-icon">🔍</div>
+      <h3>По вашему запросу ничего не найдено</h3>
+      <p>Попробуйте изменить запрос или спросите нашего ИИ-помощника внизу экрана.</p>
+      <button class="btn btn-primary" onclick="resetCatalogFilter()">Показать все товары</button>
     </div>
   </section>
 
-  <footer class="footer">© 2026 3D Print Studio. Все права защищены.</footer>
+  <!-- ═════ НАШИ УСЛУГИ ═════ -->
+  <section class="section" id="services">
+    <div class="section-header">
+      <span class="section-kicker">Возможности студии</span>
+      <h2 class="section-title">Наши услуги</h2>
+      <p class="section-sub">Полный цикл 3D-производства, моделирования и технического обслуживания принтеров</p>
+    </div>
+    <div class="services">
+      <div class="service-card">
+        <div class="service-media"><span class="service-icon">🖨️</span><img class="service-photo" src="images/services/fdm-printing.jpg" alt="FDM-печать: деталь на столе 3D-принтера" loading="lazy" draggable="false" onerror="this.hidden=true"></div>
+        <div class="service-body">
+          <div class="service-title">FDM печать</div>
+          <div class="service-desc">PLA, PETG, ABS, ASA, TPU, Nylon. От 5 ₽/г. Срок изготовления от 2 часов.</div>
+        </div>
+      </div>
+      <div class="service-card">
+        <div class="service-media"><span class="service-icon">💧</span><img class="service-photo" src="images/services/sla-resin.jpg" alt="Фотополимерная SLA-печать: детализированная модель" loading="lazy" draggable="false" onerror="this.hidden=true"></div>
+        <div class="service-body">
+          <div class="service-title">SLA / Resin</div>
+          <div class="service-desc">Фотополимерная печать высокой точности. Детализация микрорельефа до 25 мкм.</div>
+        </div>
+      </div>
+      <div class="service-card">
+        <div class="service-media"><span class="service-icon">🎨</span><img class="service-photo" src="images/services/3d-modeling.jpg" alt="3D-моделирование: модель в CAD-программе" loading="lazy" draggable="false" onerror="this.hidden=true"></div>
+        <div class="service-body">
+          <div class="service-title">3D-моделирование</div>
+          <div class="service-desc">Инженерное проектирование и реверс-инжиниринг деталей по образцу или эскизу.</div>
+        </div>
+      </div>
+      <div class="service-card">
+        <div class="service-media"><span class="service-icon">🔧</span><img class="service-photo" src="images/services/post-processing.jpg" alt="Постобработка: шлифовка и покраска изделия" loading="lazy" draggable="false" onerror="this.hidden=true"></div>
+        <div class="service-body">
+          <div class="service-title">Постобработка</div>
+          <div class="service-desc">Шлифовка, грунтовка, художественная покраска и сборка готовых макетов.</div>
+        </div>
+      </div>
+      <div class="service-card service-card-highlight">
+        <div class="service-media"><span class="service-icon">⚙️</span><img class="service-photo" src="https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=800&q=75" alt="Ремонт и доработка 3D-принтеров" loading="lazy" draggable="false" onerror="this.hidden=true"></div>
+        <div class="service-body">
+          <div class="service-title">Ремонт и апгрейд 3D-принтеров</div>
+          <div class="service-desc">Обслуживание, калибровка и тюнинг принтеров старого и нового образца (Klipper, Direct-экструдеры).</div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-  <a href="cart.html" class="cart-float" id="cartFloat">🛒 Корзина <span class="cart-count" id="cartCount">0</span></a>
+  <!-- ═════ CTA БЛОК ═════ -->
+  <div class="cta-section">
+    <div class="cta-glow" aria-hidden="true"></div>
+    <span class="section-kicker">Мгновенная оценка</span>
+    <h2>Есть своя 3D-модель?</h2>
+    <p>Загрузите файл в наш онлайн-калькулятор и узнайте точную стоимость и вес изделия за 10 секунд. Поддерживаем STL, OBJ, 3MF, STEP.</p>
+    <div class="hero-actions">
+      <a href="upload.html" class="btn btn-accent btn-lg">Открыть калькулятор</a>
+      <button class="btn btn-primary btn-lg" onclick="openAiWithQuery('calc')">Как работает расчёт?</button>
+    </div>
+  </div>
+
+  <!-- ═════ КОНТАКТЫ ═════ -->
+  <section class="section section-center" id="contacts">
+    <div class="section-header">
+      <span class="section-kicker">Свяжитесь с нами</span>
+      <h2 class="section-title">Контакты</h2>
+      <p class="section-sub">Приезжайте в нашу студию или напишите нам для консультации</p>
+    </div>
+    <div class="contacts-list">
+      <!-- Кликабельная карточка адреса: открывает плавающее окно с Яндекс Картой -->
+      <div class="contact-item contact-item--clickable" onclick="openMapModal()" role="button" tabindex="0" aria-label="Открыть адрес г. Махачкала, ул. Гапцахская, 5 на Яндекс Карте" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openMapModal();}">
+        <div class="contact-icon">📍</div>
+        <div class="contact-label">Адрес студии</div>
+        <div class="contact-val">г. Махачкала, ул. Гапцахская, 5</div>
+        <div class="contact-note">Ежедневно с 10:00 до 20:00</div>
+        <div class="contact-map-hint">🗺️ Нажмите, чтобы показать на карте</div>
+      </div>
+
+      <div class="contact-item">
+        <div class="contact-icon">📞</div>
+        <div class="contact-label">Телефон / WhatsApp</div>
+        <div class="contact-val"><a href="tel:+79289699985">+7 (928) 969-99-85</a></div>
+        <div class="contact-note">Быстрая консультация и приём заявок</div>
+      </div>
+
+      <div class="contact-item">
+        <div class="contact-icon">✉️</div>
+        <div class="contact-label">Электронная почта</div>
+        <div class="contact-val"><a href="mailto:3dprint-05@mail.ru">3dprint-05@mail.ru</a></div>
+        <div class="contact-note">Для чертежей, ТЗ и юр. лиц</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═════ ПЛАВАЮЩЕЕ ОКНО С ЯНДЕКС КАРТОЙ (ТОЧНЫЕ КООРДИНАТЫ 42.956171, 47.560144) ═════ -->
+  <div class="map-modal-overlay" id="mapModal" hidden onclick="closeMapModal(event)">
+    <div class="map-modal-card" role="dialog" aria-modal="true" aria-labelledby="mapModalTitle">
+      <div class="map-modal-header">
+        <div class="map-modal-title-wrap">
+          <span class="map-modal-pin">📍</span>
+          <div>
+            <h3 class="map-modal-title" id="mapModalTitle">г. Махачкала, ул. Гапцахская, 5</h3>
+            <p class="map-modal-sub">Студия 3D Print Studio • Ежедневно с 10:00 до 20:00</p>
+          </div>
+        </div>
+        <button class="map-modal-close" onclick="closeMapModal()" aria-label="Закрыть карту">✕</button>
+      </div>
+      <div class="map-modal-body">
+        <iframe
+          id="yandexMapFrame"
+          src="https://yandex.ru/map-widget/v1/?ll=47.560144%2C42.956171&z=18&pt=47.560144,42.956171,pm2rdl"
+          width="100%"
+          height="100%"
+          frameborder="0"
+          allowfullscreen="true"
+          loading="lazy"
+          title="Яндекс Карта — г. Махачкала, ул. Гапцахская, 5">
+        </iframe>
+      </div>
+      <div class="map-modal-footer">
+        <span class="map-modal-coords">📍 Координаты: 42.956171, 47.560144</span>
+        <a href="https://yandex.ru/maps/?rtext=~42.956171,47.560144" target="_blank" rel="noopener" class="btn btn-accent">
+          Построить маршрут в Яндекс Картах ↗
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="logo">3D<span>Print</span>Studio</div>
+      <div>© 2026 3D Print Studio. Все права защищены.</div>
+      <small class="footer-credits">Фото: <a href="https://unsplash.com" target="_blank" rel="noopener">Unsplash</a>, <a href="https://www.pexels.com" target="_blank" rel="noopener">Pexels</a></small>
+    </div>
+  </footer>
+
+  <!-- ═════ ПЛАВАЮЩАЯ КОРЗИНА ═════ -->
+  <a href="cart.html" class="cart-float" id="cartFloat">
+    <span>🛒 Корзина</span>
+    <span class="cart-count" id="cartCount">0</span>
+  </a>
+
+  <!-- ═════ ИИ-ПОМОЩНИК (AI ASSISTANT WIDGET) ═════ -->
+  <div class="ai-widget" id="aiWidget">
+    <button class="ai-toggle-btn" id="aiToggleBtn" onclick="toggleAiChat()" aria-label="Открыть ИИ-помощника">
+      <span class="ai-pulse"></span>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 0 1 2-2z"></path>
+        <circle cx="9" cy="13" r="1.25" fill="currentColor"></circle>
+        <circle cx="15" cy="13" r="1.25" fill="currentColor"></circle>
+      </svg>
+      <span>ИИ-Помощник</span>
+    </button>
+
+    <div class="ai-chat-window" id="aiChatWindow" hidden>
+      <div class="ai-chat-header">
+        <div class="ai-header-info">
+          <div class="ai-avatar">✨</div>
+          <div>
+            <div class="ai-title">3D Print AI</div>
+            <div class="ai-status"><span class="status-dot"></span>Онлайн • Умный гид по сайту</div>
+          </div>
+        </div>
+        <button class="ai-close-btn" onclick="toggleAiChat()" aria-label="Закрыть чат">✕</button>
+      </div>
+
+      <div class="ai-chat-messages" id="aiMessages">
+        <div class="ai-msg bot">
+          Привет! Я виртуальный ИИ-помощник <b>3D Print Studio</b> 👋<br><br>
+          Могу подсказать наш адрес, объяснить как сделать заказ или рассчитать STL-модель, а также <b>быстро найти нужный товар</b> прямо здесь. Выберите вопрос ниже или напишите свой:
+        </div>
+      </div>
+
+      <!-- Быстрые кнопки популярных запросов -->
+      <div class="ai-quick-chips">
+        <button class="ai-chip" onclick="handleQuickQuestion('address')">📍 Как вас найти / Адрес</button>
+        <button class="ai-chip" onclick="handleQuickQuestion('order')">🛒 Как оформить заказ</button>
+        <button class="ai-chip" onclick="handleQuickQuestion('calc')">📐 Расчёт STL в калькуляторе</button>
+        <button class="ai-chip" onclick="handleQuickQuestion('search')">🔍 Поиск товаров</button>
+      </div>
+
+      <form class="ai-chat-input" onsubmit="sendUserMessage(event)">
+        <input type="text" id="aiInput" placeholder="Спросите или введите товар (напр. дракон)..." autocomplete="off">
+        <button type="submit" class="ai-send-btn" aria-label="Отправить">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="22" y1="2" x2="11" y2="13"></line>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+          </svg>
+        </button>
+      </form>
+    </div>
+  </div>
 
   <script>
-    // ═══ СИНХРОНИЗАЦИЯ ПРИ ЗАГРУЗКЕ ═══
-    (function syncBadge(){
+    /* ═══════════════════════════════════════════════════════
+       1. HERO SLIDER (6 СЛАЙДОВ) — infinite loop, drag, dots
+       ═══════════════════════════════════════════════════════ */
+    (function(){
+      const slider = document.getElementById('heroSlider');
+      const wrap   = document.getElementById('heroSliderWrap');
+      const dots   = document.querySelectorAll('.hero-dots .dot');
+      const totalReal = 6;
+      let index = 1;
+      let isDragging = false;
+      let startX = 0;
+      let currentTranslate = 0;
+      let prevTranslate = 0;
+      let animationID;
+      let autoSlide;
+
+      function setPositionByIndex() {
+        slider.style.transition = 'transform 0.6s cubic-bezier(0.25, 1, 0.5, 1)';
+        currentTranslate = index * -100;
+        prevTranslate = currentTranslate;
+        slider.style.transform = `translateX(${currentTranslate}%)`;
+        updateDots();
+      }
+
+      const slides  = Array.from(slider.children);
+      const counter = document.getElementById('heroCurrent');
+
+      function updateDots() {
+        let realIndex = index;
+        if (index === 0) realIndex = totalReal;
+        if (index === totalReal + 1) realIndex = 1;
+        dots.forEach((d, i) => d.classList.toggle('active', i === realIndex - 1));
+        slides.forEach((s, i) => s.classList.toggle('is-active',
+          i === realIndex || (realIndex === 1 && i === totalReal + 1) || (realIndex === totalReal && i === 0)));
+        if (counter) counter.textContent = String(realIndex).padStart(2, '0');
+      }
+
+      slider.addEventListener('transitionend', () => {
+        if (index === 0) {
+          slider.style.transition = 'none';
+          index = totalReal;
+          currentTranslate = index * -100;
+          prevTranslate = currentTranslate;
+          slider.style.transform = `translateX(${currentTranslate}%)`;
+          updateDots();
+        }
+        if (index === totalReal + 1) {
+          slider.style.transition = 'none';
+          index = 1;
+          currentTranslate = index * -100;
+          prevTranslate = currentTranslate;
+          slider.style.transform = `translateX(${currentTranslate}%)`;
+          updateDots();
+        }
+      });
+
+      window.moveSlide = function(dir) {
+        if (isDragging) return;
+        index += dir;
+        setPositionByIndex();
+        resetAuto();
+      };
+
+      window.goToSlide = function(n) {
+        if (isDragging) return;
+        index = n + 1;
+        setPositionByIndex();
+        resetAuto();
+      };
+
+      wrap.addEventListener('pointerdown', (e) => {
+        if (e.target.closest('a, button')) return;
+        isDragging = true;
+        startX = e.clientX;
+        wrap.classList.add('dragging');
+        slider.style.transition = 'none';
+        cancelAnimationFrame(animationID);
+        animationID = requestAnimationFrame(animationLoop);
+      });
+
+      wrap.addEventListener('pointermove', (e) => {
+        if (!isDragging) return;
+        const diff = (e.clientX - startX) / wrap.offsetWidth * 100;
+        currentTranslate = prevTranslate + diff;
+        slider.style.transform = `translateX(${currentTranslate}%)`;
+      });
+
+      wrap.addEventListener('pointerup', (e) => {
+        if (!isDragging) return;
+        finishDrag(e.clientX);
+      });
+
+      wrap.addEventListener('pointerleave', () => {
+        if (isDragging) finishDrag();
+      });
+
+      function finishDrag(clientX) {
+        isDragging = false;
+        wrap.classList.remove('dragging');
+        cancelAnimationFrame(animationID);
+        const endX = clientX ?? startX;
+        const movedBy = (endX - startX) / wrap.offsetWidth * 100;
+        if (movedBy < -12) index++;
+        else if (movedBy > 12) index--;
+        setPositionByIndex();
+        resetAuto();
+      }
+
+      function animationLoop() {
+        if (isDragging) animationID = requestAnimationFrame(animationLoop);
+      }
+
+      function startAuto() {
+        autoSlide = setInterval(() => moveSlide(1), 6000);
+      }
+      function resetAuto() {
+        clearInterval(autoSlide);
+        startAuto();
+      }
+
+      wrap.classList.add('js-ready');
+      setPositionByIndex();
+      startAuto();
+    })();
+
+    /* ═══════════════════════════════════════════════════════
+       2. КОРЗИНА И КАТАЛОГ (ОБЛЕГЧЁННЫЙ ПОИСК НА СТРАНИЦЕ)
+       ═══════════════════════════════════════════════════════ */
+    const PRODUCTS_DB = [
+      { id: 1, name: 'Дракон-артикулятор', price: 1290, icon: '🐉', desc: 'Подвижная фигурка с шарнирами, PLA, 25 см', keywords: ['дракон', 'фигурка', 'игрушка', 'шарнир', 'pla', 'артикулятор'] },
+      { id: 2, name: 'Головоломка Куб', price: 890, icon: '🧩', desc: 'Механическая головоломка, ударопрочный PETG', keywords: ['головоломка', 'куб', 'игра', 'petg', 'механика'] },
+      { id: 3, name: 'Подставка для растений', price: 650, icon: '🌿', desc: 'Стиль бионика, композитный PLA дерево', keywords: ['подставка', 'растения', 'цветы', 'горшок', 'дом', 'дерево', 'кашпо'] },
+      { id: 4, name: 'Подставка для наушников', price: 490, icon: '🎧', desc: 'Эргономичная настольная стойка, матовый PLA', keywords: ['подставка', 'наушники', 'пк', 'стол', 'офис', 'гейминг'] },
+      { id: 5, name: 'Брелок с именем', price: 350, icon: '🗝️', desc: 'Персонализированный брелок, 3 цвета', keywords: ['брелок', 'имя', 'ключи', 'сувенир', 'подарок', 'дешево'] },
+      { id: 6, name: 'Робот-конструктор', price: 1790, icon: '🤖', desc: 'Набор для сборки мини-робота, 45 деталей', keywords: ['робот', 'конструктор', 'набор', 'сборка', 'детали'] }
+    ];
+
+    function syncBadge(){
       const cart = JSON.parse(localStorage.getItem('pp3d_cart') || '[]');
       const total = cart.reduce((s, i) => s + i.qty, 0);
       document.getElementById('cartCount').textContent = total;
-    })();
+    }
+    syncBadge();
 
-    // ═══ ДОБАВЛЕНИЕ В КОРЗИНУ ═══
     function addToCart(btn, name, price, icon) {
       let cart = JSON.parse(localStorage.getItem('pp3d_cart') || '[]');
       const existing = cart.find(item => item.name === name);
-      if (existing) {
-        existing.qty++;
-      } else {
-        cart.push({ name, price: parseInt(price.replace(/\D/g,'')), icon: icon || '📦', qty: 1 });
-      }
+      if (existing) existing.qty++;
+      else cart.push({ name, price: parseInt(String(price).replace(/\D/g,'')), icon: icon || '📦', qty: 1 });
       localStorage.setItem('pp3d_cart', JSON.stringify(cart));
 
-      // анимация кнопки
-      const orig = btn.textContent;
-      btn.textContent = '✓ Добавлено';
-      btn.style.background = '#2ecc71';
-      setTimeout(() => { btn.textContent = orig; btn.style.background = ''; }, 1200);
-
-      // обновить бейдж
-      const total = cart.reduce((s, i) => s + i.qty, 0);
-      document.getElementById('cartCount').textContent = total;
+      if (btn) {
+        const orig = btn.textContent;
+        btn.textContent = '✓ Добавлено';
+        btn.classList.add('btn-added');
+        setTimeout(() => {
+          btn.textContent = orig;
+          btn.classList.remove('btn-added');
+        }, 1200);
+      }
+      syncBadge();
     }
 
-    // ═══ НАВИГАЦИЯ ═══
+    // Живой поиск и фильтрация в секции товаров
+    const searchInput = document.getElementById('catalogSearch');
+    const searchClear = document.getElementById('searchClear');
+    const filterPills = document.querySelectorAll('.filter-pill');
+    const productCards = document.querySelectorAll('#productsGrid .product-card');
+    const emptySearch = document.getElementById('emptySearch');
+    let currentCategory = 'all';
+
+    function filterCatalog() {
+      const q = searchInput.value.trim().toLowerCase();
+      searchClear.hidden = !q;
+      let visibleCount = 0;
+
+      productCards.forEach(card => {
+        const cat = card.dataset.category;
+        const text = (card.dataset.title + ' ' + card.dataset.keywords + ' ' + card.textContent).toLowerCase();
+        const matchCat = currentCategory === 'all' || cat === currentCategory;
+        const matchQuery = !q || text.includes(q);
+
+        if (matchCat && matchQuery) {
+          card.hidden = false;
+          visibleCount++;
+        } else {
+          card.hidden = true;
+        }
+      });
+
+      emptySearch.hidden = visibleCount > 0;
+    }
+
+    searchInput.addEventListener('input', filterCatalog);
+    searchClear.addEventListener('click', () => {
+      searchInput.value = '';
+      filterCatalog();
+      searchInput.focus();
+    });
+
+    filterPills.forEach(pill => {
+      pill.addEventListener('click', () => {
+        filterPills.forEach(p => p.classList.remove('active'));
+        pill.classList.add('active');
+        currentCategory = pill.dataset.filter;
+        filterCatalog();
+      });
+    });
+
+    window.resetCatalogFilter = function() {
+      searchInput.value = '';
+      currentCategory = 'all';
+      filterPills.forEach(p => p.classList.toggle('active', p.dataset.filter === 'all'));
+      filterCatalog();
+    };
+
+    /* ═══════════════════════════════════════════════════════
+       3. ПЛАВАЮЩЕЕ ОКНО С ЯНДЕКС КАРТОЙ (MODAL)
+       ═══════════════════════════════════════════════════════ */
+    const mapModal = document.getElementById('mapModal');
+
+    window.openMapModal = function() {
+      mapModal.hidden = false;
+      document.body.style.overflow = 'hidden';
+    };
+
+    window.closeMapModal = function(e) {
+      if (e && e.target !== mapModal) return;
+      mapModal.hidden = true;
+      document.body.style.overflow = '';
+    };
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !mapModal.hidden) {
+        closeMapModal();
+      }
+    });
+
+    /* ═══════════════════════════════════════════════════════
+       4. ИИ-ПОМОЩНИК (AI ASSISTANT LOGIC)
+       ═══════════════════════════════════════════════════════ */
+    const aiWindow = document.getElementById('aiChatWindow');
+    const aiMessages = document.getElementById('aiMessages');
+    const aiInput = document.getElementById('aiInput');
+
+    window.toggleAiChat = function() {
+      aiWindow.hidden = !aiWindow.hidden;
+      if (!aiWindow.hidden) {
+        setTimeout(() => aiInput.focus(), 100);
+      }
+    };
+
+    window.openAiWithQuery = function(type) {
+      if (aiWindow.hidden) aiWindow.hidden = false;
+      handleQuickQuestion(type);
+    };
+
+    function appendMessage(html, sender = 'bot') {
+      const div = document.createElement('div');
+      div.className = `ai-msg ${sender}`;
+      div.innerHTML = html;
+      aiMessages.appendChild(div);
+      aiMessages.scrollTop = aiMessages.scrollHeight;
+    }
+
+    function renderProductCardsInChat(items) {
+      return items.map(item => `
+        <div class="ai-product-item">
+          <div class="ai-prod-icon">${item.icon}</div>
+          <div class="ai-prod-info">
+            <div class="ai-prod-name">${item.name}</div>
+            <div class="ai-prod-price">${item.price.toLocaleString('ru-RU')} ₽</div>
+          </div>
+          <button class="ai-prod-btn" onclick="addToCart(this, '${item.name}', '${item.price}', '${item.icon}')">+ В корзину</button>
+        </div>
+      `).join('');
+    }
+
+    window.handleQuickQuestion = function(type) {
+      const labels = {
+        address: 'Как вас найти и какой у вас адрес?',
+        order: 'Как оформить заказ на сайте?',
+        calc: 'Как рассчитать стоимость STL-модели в калькуляторе?',
+        search: 'Помоги быстро найти товар на сайте'
+      };
+      appendMessage(labels[type] || type, 'user');
+      setTimeout(() => generateAiResponse(type), 260);
+    };
+
+    window.sendUserMessage = function(e) {
+      e.preventDefault();
+      const text = aiInput.value.trim();
+      if (!text) return;
+      appendMessage(text, 'user');
+      aiInput.value = '';
+      setTimeout(() => processFreeText(text), 300);
+    };
+
+    function generateAiResponse(type) {
+      if (type === 'address') {
+        appendMessage(`
+          📍 <b>Наш адрес и контакты:</b><br>
+          Мы находимся в <b>г. Махачкала, ул. Гапцахская, 5</b>.<br><br>
+          • <b>График:</b> ежедневно с 10:00 до 20:00<br>
+          • <b>Телефон:</b> <a href="tel:+79289699985">+7 (928) 969-99-85</a><br>
+          • <b>Email:</b> 3dprint-05@mail.ru<br><br>
+          Вы можете забрать заказ самовывозом из студии или заказать доставку (СДЭК / Почта России / курьер).
+          <div class="ai-msg-actions">
+            <button class="ai-inline-btn" onclick="openMapModal()">🗺️ Открыть Яндекс Карту</button>
+            <a href="#contacts" class="ai-inline-btn" onclick="toggleAiChat()">К контактам</a>
+          </div>
+        `);
+      } else if (type === 'order') {
+        appendMessage(`
+          🛒 <b>Оформить заказ очень просто (2 способа):</b><br><br>
+          <b>Способ 1 — Готовый товар:</b><br>
+          1. Выберите изделие в каталоге (или прямо здесь в чате) и нажмите <b>«В корзину»</b>.<br>
+          2. Нажмите на фиолетовую кнопку <b>«🛒 Корзина»</b> в правом нижнем углу.<br>
+          3. Укажите контакты и способ доставки.<br><br>
+          <b>Способ 2 — Своя 3D-модель:</b><br>
+          Перейдите в раздел <a href="upload.html">Калькулятор</a>, загрузите файл и добавьте расчёт в корзину!
+          <div class="ai-msg-actions">
+            <a href="products.html" class="ai-inline-btn">Перейти в каталог</a>
+            <a href="cart.html" class="ai-inline-btn">Открыть корзину</a>
+          </div>
+        `);
+      } else if (type === 'calc') {
+        appendMessage(`
+          📐 <b>Как рассчитать стоимость STL-модели:</b><br><br>
+          1. Откройте страницу <a href="upload.html"><b>Онлайн-калькулятора</b></a>.<br>
+          2. Перетащите ваш 3D-файл (<b>STL, OBJ, 3MF или STEP</b>).<br>
+          3. Выберите материал (PLA, PETG, ABS, TPU или фотополимерную смолу) и процент заполнения.<br>
+          4. За <b>10 секунд</b> система автоматически посчитает объём, точный вес в граммах и итоговую цену!<br>
+          <div class="ai-msg-actions">
+            <a href="upload.html" class="ai-inline-btn">Рассчитать STL сейчас →</a>
+          </div>
+        `);
+      } else if (type === 'search') {
+        appendMessage(`
+          🔍 <b>Облегчённый поиск товаров:</b><br>
+          Напишите мне любое слово (например: <i>«дракон»</i>, <i>«подставка»</i>, <i>«подарок»</i>, <i>«робот»</i> или <i>«до 700 рублей»</i>), и я мгновенно подберу варианты!<br><br>
+          Вот наши популярные позиции прямо сейчас:
+          <div class="ai-products-list">
+            ${renderProductCardsInChat(PRODUCTS_DB.slice(0, 3))}
+          </div>
+          <div class="ai-msg-actions">
+            <button class="ai-inline-btn" onclick="showAllProductsInChat()">Показать все 6 товаров</button>
+          </div>
+        `);
+      }
+    }
+
+    window.showAllProductsInChat = function() {
+      appendMessage(`
+        📦 <b>Весь каталог готовых изделий:</b>
+        <div class="ai-products-list">
+          ${renderProductCardsInChat(PRODUCTS_DB)}
+        </div>
+      `);
+    };
+
+    function processFreeText(rawText) {
+      const q = rawText.toLowerCase();
+
+      if (/(адрес|где вы|как найти|находитесь|махачкал|гапцах|контакт|телефон|почт|добраться|локаци|карт)/i.test(q)) {
+        return generateAiResponse('address');
+      }
+
+      if (/(stl|стл|калькулятор|рассчитат|расчет|расчёт|стоимость модел|своя модел|вес|obj|3mf|скольк.*печать)/i.test(q)) {
+        return generateAiResponse('calc');
+      }
+
+      if (/(как заказат|оформит|заказ|корзин|купить|оплат|доставк|сдэк)/i.test(q)) {
+        return generateAiResponse('order');
+      }
+
+      if (/(ремонт|принтер|апгрейд|доработк|klipper|клиппер|калибровк|экструдер|сломал)/i.test(q)) {
+        return appendMessage(`
+          ⚙️ <b>Ремонт и модернизация 3D-принтеров:</b><br>
+          Мы ремонтируем и дорабатываем 3D-принтеры как <b>старого</b>, так и <b>нового образца</b> (FDM и SLA).<br><br>
+          • Диагностика, замена хотэндов, плат и механики.<br>
+          • Перевод на прошивку <b>Klipper</b>, установка Direct-экструдеров и автоуровня.<br><br>
+          Позвоните нам по номеру <a href="tel:+79289699985">+7 (928) 969-99-85</a> или привозите принтер на ул. Гапцахская, 5!
+        `);
+      }
+
+      const priceMatch = q.match(/(?:до|дешевле|бюджет)\s*(\d+)/);
+      let matchedProducts = [];
+
+      if (priceMatch) {
+        const maxPrice = parseInt(priceMatch[1], 10);
+        matchedProducts = PRODUCTS_DB.filter(p => p.price <= maxPrice);
+      } else {
+        matchedProducts = PRODUCTS_DB.filter(p =>
+          p.name.toLowerCase().includes(q) ||
+          p.desc.toLowerCase().includes(q) ||
+          p.keywords.some(k => q.includes(k) || k.includes(q))
+        );
+      }
+
+      if (matchedProducts.length > 0) {
+        searchInput.value = rawText;
+        filterCatalog();
+
+        return appendMessage(`
+          ✨ Нашёл для вас <b>${matchedProducts.length} шт.</b> по запросу «${rawText}»:<br>
+          <div class="ai-products-list">
+            ${renderProductCardsInChat(matchedProducts)}
+          </div>
+          <div class="ai-msg-actions">
+            <a href="#products" class="ai-inline-btn" onclick="toggleAiChat()">Смотреть в каталоге</a>
+          </div>
+        `);
+      }
+
+      if (/(товар|каталог|поиск|найди|что есть|ассортимент)/i.test(q)) {
+        return showAllProductsInChat();
+      }
+
+      appendMessage(`
+        Я понял ваш запрос! Вот чем я могу помочь прямо сейчас:<br>
+        • Нажмите <b>«📍 Как вас найти»</b> для адреса в Махачкале.<br>
+        • Нажмите <b>«📐 Расчёт STL»</b> для оценки 3D-модели.<br>
+        • Или введите название товара (например: <i>дракон, куб, подставка, брелок, робот</i>).
+        <div class="ai-msg-actions">
+          <button class="ai-inline-btn" onclick="showAllProductsInChat()">Показать все товары</button>
+        </div>
+      `);
+    }
+
+    // Плавный скролл по якорям
     document.querySelectorAll('a[href^="#"]').forEach(a => {
       a.addEventListener('click', e => {
-        e.preventDefault();
-        document.querySelector(a.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
-        document.querySelectorAll('.nav-links a').forEach(l => l.classList.remove('active'));
-        a.classList.add('active');
+        const targetId = a.getAttribute('href');
+        const targetEl = document.querySelector(targetId);
+        if (targetEl) {
+          e.preventDefault();
+          targetEl.scrollIntoView({ behavior: 'smooth' });
+        }
       });
     });
   </script>
