@@ -4,110 +4,521 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Личный кабинет — 3D Print Studio</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <style>
-    :root { --primary: #7b2cbf; --accent: #ffca3a; --bg: #0f0f1a; --card: #1a1a2e; --text: #e8e8f0; --muted: #a0a0b8; }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background: var(--bg); font-family: 'Inter', system-ui, sans-serif; color: var(--text); }
-    .nav { display: flex; align-items: center; justify-content: space-between; padding: 1.2rem 2rem; background: rgba(15,15,26,0.95); backdrop-filter: blur(12px); position: sticky; top: 0; z-index: 100; border-bottom: 1px solid rgba(123,44,191,0.3); }
-    .logo { font-size: 1.5rem; font-weight: 800; color: var(--accent); text-decoration: none; }
-    .logo span { color: var(--primary); }
-    .btn { padding: 0.6rem 1.4rem; border-radius: 10px; border: none; cursor: pointer; font-weight: 600; font-size: 0.9rem; transition: all 0.2s; font-family: inherit; text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem; }
-    .btn-primary { background: var(--primary); color: #fff; }
-    .btn-primary:hover { background: #9b4fd9; }
-    .btn-outline { background: transparent; color: var(--muted); border: 1px solid rgba(255,255,255,0.1); }
-    
-    .container { max-width: 960px; margin: 0 auto; padding: 2.5rem 2rem; }
-    .page-title { font-size: 1.8rem; font-weight: 800; margin-bottom: 1.5rem; }
-    
-    .profile-grid { display: grid; grid-template-columns: 280px 1fr; gap: 2rem; }
-    @media (max-width: 800px) { .profile-grid { grid-template-columns: 1fr; } }
-
-    .profile-card { background: var(--card); border-radius: 16px; padding: 1.8rem; border: 1px solid rgba(255,255,255,0.05); text-align: center; }
-    .avatar { width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--accent)); display: flex; align-items: center; justify-content: center; font-size: 2rem; margin: 0 auto 1rem; }
-    .profile-name { font-size: 1.2rem; font-weight: 700; margin-bottom: 0.2rem; }
-    .profile-email { color: var(--muted); font-size: 0.9rem; margin-bottom: 1.2rem; }
-    
-    .stat-row { display: flex; justify-content: space-between; padding: 0.6rem 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.9rem; }
-    .stat-row:last-child { border-bottom: none; }
-    .stat-label { color: var(--muted); }
-    .stat-value { font-weight: 700; color: var(--accent); }
-
-    .panel { background: var(--card); border-radius: 16px; padding: 1.5rem; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 1.5rem; }
-    .panel h3 { font-size: 1.1rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
-
-    .order-item { display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: rgba(255,255,255,0.02); border-radius: 10px; margin-bottom: 0.6rem; border: 1px solid rgba(255,255,255,0.03); }
-    .order-id { font-weight: 700; font-size: 0.9rem; }
-    .order-date { color: var(--muted); font-size: 0.8rem; }
-    .order-sum { font-weight: 800; color: var(--accent); }
-    .empty-orders { text-align: center; padding: 2rem; color: var(--muted); }
-
-    .footer { text-align: center; padding: 2rem; color: var(--muted); font-size: 0.9rem; border-top: 1px solid rgba(255,255,255,0.05); margin-top: 2rem; }
-  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="profile.css">
 </head>
 <body>
 
+  <!-- Фоновая технологичная сетка как на главной -->
+  <div class="bg-grid" aria-hidden="true"></div>
+
+  <!-- ═════ НАВИГАЦИЯ (СИНХРОНИЗИРОВАНА С INDEX.HTML) ═════ -->
   <nav class="nav">
-    <a href="index.html" class="logo">3D<span>Print</span>Studio</a>
-    <div style="display:flex;align-items:center;gap:0.6rem;" id="navAuth">
-      <!-- Заполняется auth.js -->
-    </div>
+    <a href="index.html" class="logo">
+      <span class="badge-icon">◈</span>
+      3D<span>Print</span>Studio
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html">Главная</a></li>
+      <li><a href="products.html">Товары</a></li>
+      <li><a href="upload.html">Калькулятор</a></li>
+      <li><a href="index.html#services">Услуги и ремонт</a></li>
+      <li><a href="index.html#contacts">Контакты</a></li>
+    </ul>
+    <div class="nav-auth" id="navAuth"></div>
   </nav>
 
-  <div class="container">
-    <h1 class="page-title">Личный кабинет</h1>
-    
-    <div class="profile-grid">
-      <!-- Левая колонка -->
+  <!-- ═════ ОСНОВНОЙ КОНТЕЙНЕР КАБИНЕТА ═════ -->
+  <main class="container">
+
+    <!-- Верхняя панель заголовка и переключения вкладок -->
+    <div class="profile-topbar">
       <div>
-        <div class="profile-card">
-          <div class="avatar">👤</div>
-          <div class="profile-name" id="pName">Загрузка...</div>
-          <div class="profile-email" id="pEmail">...</div>
-          <div style="margin-top:1rem;">
-            <a href="cart.html" class="btn btn-primary" style="width:100%;margin-bottom:0.5rem;">🛒 Перейти в корзину</a>
-            <button class="btn btn-outline" style="width:100%;" onclick="AUTH.logout()">Выйти из аккаунта</button>
-          </div>
-        </div>
+        <span class="section-kicker">Аккаунт клиента</span>
+        <h1 class="page-title">Личный кабинет</h1>
       </div>
+      <div class="profile-tabs" role="tablist">
+        <button class="tab-btn active" type="button" data-tab="overview" onclick="switchProfileTab('overview')">
+          📊 Обзор и заказы
+        </button>
+        <button class="tab-btn" type="button" data-tab="settings" onclick="switchProfileTab('settings')">
+          ⚙️ Настройки профиля
+        </button>
+      </div>
+    </div>
 
-      <!-- Правая колонка -->
-      <div>
-        <div class="panel">
-          <h3>📋 Информация</h3>
-          <div class="stat-row"><span class="stat-label">Телефон</span><span class="stat-value" id="pPhone">—</span></div>
-          <div class="stat-row"><span class="stat-label">Дата регистрации</span><span class="stat-value" id="pDate">—</span></div>
-          <div class="stat-row"><span class="stat-label">Всего заказов</span><span class="stat-value" id="pOrdersCount">0</span></div>
-        </div>
-
-        <div class="panel">
-          <h3>📦 История заказов</h3>
-          <div id="ordersList">
-            <div class="empty-orders">Пока нет заказов</div>
-          </div>
+    <!-- ═════ ШАПКА ПРОФИЛЯ (896x100px) ═════ -->
+    <div class="profile-banner-wrap">
+      <div class="profile-banner" id="profileBanner">
+        <img id="bannerImg" class="banner-img" alt="Шапка профиля 896x100" hidden>
+        <div class="banner-overlay">
+          <span class="banner-size-badge">Шапка профиля • 896×100 px</span>
+          <button class="banner-edit-btn" type="button" onclick="switchProfileTab('settings')">
+            🖼️ Изменить шапку
+          </button>
         </div>
       </div>
     </div>
-  </div>
 
-  <footer class="footer">© 2026 3D Print Studio. Все права защищены.</footer>
+    <!-- ═════ СЕТКА ПРОФИЛЯ ═════ -->
+    <div class="profile-grid">
+
+      <!-- ЛЕВАЯ КОЛОНКА: КАРТОЧКА ПРОФИЛЯ С АВАТАРОМ 180px -->
+      <aside>
+        <div class="profile-card">
+          <div class="avatar-wrap">
+            <div class="avatar" id="avatarBox" onclick="document.getElementById('avatarInput').click()" title="Нажмите, чтобы изменить аватар">
+              <span id="avatarEmoji">👤</span>
+              <img id="avatarImg" class="avatar-img" alt="Аватар пользователя" hidden>
+              <div class="avatar-hover-overlay">📷 Сменить фото</div>
+            </div>
+            <input type="file" id="avatarInput" accept="image/png,image/jpeg,image/webp" hidden>
+          </div>
+
+          <!-- Данные под аватаркой 180px -->
+          <div class="profile-name" id="pName">Загрузка...</div>
+          <div class="profile-email" id="pEmail">...</div>
+          <div class="profile-phone">
+            <span>📞</span>
+            <span id="pPhoneCard">—</span>
+          </div>
+
+          <!-- Бейдж персональной скидки под номером телефона -->
+          <div class="discount-pill" id="discountPill">
+            <div class="discount-pill-label">Персональная скидка</div>
+            <div class="discount-pill-value"><span id="pDiscountVal">3</span>%</div>
+            <div class="discount-pill-tier" id="pDiscountTier">Уровень: Старт</div>
+          </div>
+
+          <div class="profile-actions">
+            <a href="cart.html" class="btn btn-primary btn-full">🛒 Перейти в корзину</a>
+            <button class="btn btn-outline btn-full" type="button" onclick="AUTH.logout()">Выйти из аккаунта</button>
+          </div>
+        </div>
+      </aside>
+
+      <!-- ПРАВАЯ КОЛОНКА: ВКЛАДКИ -->
+      <section class="profile-content">
+
+        <!-- ВКЛАДКА 1: ОБЗОР, РЕЙТИНГ, СКИДКИ И ЗАКАЗЫ -->
+        <div id="tabOverview" class="tab-pane">
+
+          <!-- Панель рейтинга и системы скидок -->
+          <div class="panel loyalty-panel">
+            <div class="panel-header-flex">
+              <h3>🏆 Система рейтинга и скидок</h3>
+              <span class="rating-badge" id="pRatingBadge">★ 4.5 • 120 XP</span>
+            </div>
+
+            <div class="loyalty-grid">
+              <div class="loyalty-stat-box">
+                <span class="loyalty-stat-title">Текущая скидка</span>
+                <span class="loyalty-stat-big accent" id="loyaltyDiscountBig">3%</span>
+                <span class="loyalty-stat-sub" id="loyaltyStatusText">Статус: Старт</span>
+              </div>
+              <div class="loyalty-stat-box">
+                <span class="loyalty-stat-title">Рейтинг активности</span>
+                <span class="loyalty-stat-big" id="loyaltyStars">★★★★☆</span>
+                <span class="loyalty-stat-sub" id="loyaltyScoreText">Оценка: 4.5 из 5.0</span>
+              </div>
+              <div class="loyalty-stat-box">
+                <span class="loyalty-stat-title">Баллы активности</span>
+                <span class="loyalty-stat-big" id="loyaltyXp">120 XP</span>
+                <span class="loyalty-stat-sub" id="loyaltyNextTier">До следующего уровня: 80 XP</span>
+              </div>
+            </div>
+
+            <!-- Прогресс-бар уровней скидки -->
+            <div class="progress-wrap">
+              <div class="progress-labels">
+                <span>Старт (3%)</span>
+                <span>Активный (5%)</span>
+                <span>Инженер (10%)</span>
+                <span>VIP Мастер (15%)</span>
+              </div>
+              <div class="progress-bar-bg">
+                <div class="progress-bar-fill" id="loyaltyProgressFill" style="width: 20%;"></div>
+              </div>
+              <p class="loyalty-hint">
+                💡 Скидка и рейтинг растут автоматически при оформлении заказов, добавлении товаров в корзину и активности на сайте.
+              </p>
+            </div>
+          </div>
+
+          <!-- Панель общей информации -->
+          <div class="panel">
+            <h3>📋 Информация об аккаунте</h3>
+            <div class="stat-row">
+              <span class="stat-label">Имя пользователя</span>
+              <span class="stat-value" id="pInfoName">—</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Электронная почта</span>
+              <span class="stat-value" id="pInfoEmail">—</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Телефон (при регистрации)</span>
+              <span class="stat-value" id="pPhone">—</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Дата регистрации</span>
+              <span class="stat-value" id="pDate">—</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Всего заказов / В корзине</span>
+              <span class="stat-value" id="pOrdersCount">0</span>
+            </div>
+          </div>
+
+          <!-- Панель истории заказов -->
+          <div class="panel">
+            <h3>📦 История заказов</h3>
+            <div id="ordersList">
+              <div class="empty-orders">Пока нет заказов</div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ВКЛАДКА 2: НАСТРОЙКИ ПРОФИЛЯ -->
+        <div id="tabSettings" class="tab-pane" hidden>
+
+          <!-- 1) Настройка шапки профиля 896x100px до 5 МБ и аватарки -->
+          <div class="panel">
+            <h3>🖼️ 1. Шапка профиля (896×100 px) и аватар</h3>
+            <p class="settings-desc">
+              Загрузите изображение для шапки профиля (рекомендуемый размер <b>896×100 px</b>, максимальный вес файла — <b>до 5 МБ</b>, форматы JPG, PNG, WebP).
+            </p>
+
+            <div class="banner-upload-box">
+              <div class="banner-upload-actions">
+                <label for="bannerInput" class="btn btn-primary">
+                  📤 Загрузить шапку (до 5 МБ)
+                </label>
+                <input type="file" id="bannerInput" accept="image/png,image/jpeg,image/webp" hidden>
+                <button class="btn btn-outline" type="button" onclick="resetBanner()">
+                  Сбросить шапку
+                </button>
+              </div>
+              <div class="upload-status" id="bannerStatus">Размер шапки: 896×100 px • Макс. 5 МБ</div>
+            </div>
+
+            <div class="avatar-settings-row">
+              <div>
+                <div class="settings-label">Аватар профиля (180×180 px)</div>
+                <div class="settings-sub">Отображается в левой карточке личного кабинета</div>
+              </div>
+              <div class="banner-upload-actions">
+                <button class="btn btn-primary" type="button" onclick="document.getElementById('avatarInput').click()">
+                  📷 Загрузить аватар
+                </button>
+                <button class="btn btn-outline" type="button" onclick="resetAvatar()">
+                  Удалить фото
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2) Изменение имени пользователя -->
+          <div class="panel">
+            <h3>✏️ 2. Изменение имени пользователя</h3>
+            <p class="settings-desc">Вы можете в любой момент изменить отображаемое имя вашего профиля.</p>
+            <form class="settings-form" onsubmit="saveUserName(event)">
+              <div class="form-group">
+                <label for="inputUserName">Имя пользователя</label>
+                <input type="text" id="inputUserName" class="form-input" placeholder="Введите ваше имя" required minlength="2" maxlength="50">
+              </div>
+              <div class="form-actions">
+                <button type="submit" class="btn btn-accent">💾 Сохранить имя</button>
+                <span class="save-msg" id="nameSaveMsg" hidden>✓ Имя успешно обновлено!</span>
+              </div>
+            </form>
+          </div>
+
+          <!-- 3) Вкладка/блок с номером телефона без возможности изменять -->
+          <div class="panel">
+            <h3>🔒 3. Привязанный номер телефона</h3>
+            <p class="settings-desc">
+              Номер телефона указывается один раз при регистрации аккаунта и используется для подтверждения заказов. Изменение номера заблокировано в целях безопасности.
+            </p>
+            <div class="form-group">
+              <label for="readonlyPhone">Номер телефона (только чтение)</label>
+              <div class="locked-input-wrap">
+                <input type="tel" id="readonlyPhone" class="form-input form-input--locked" value="—" readonly disabled>
+                <span class="lock-badge">🔒 Неизменяемый</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="logo">3D<span>Print</span>Studio</div>
+      <div>© 2026 3D Print Studio. Все права защищены.</div>
+    </div>
+  </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="auth.js"></script>
   <script>
+    let currentUserKey = 'guest';
+    let currentUserObj = null;
+
+    /* Переключение вкладок кабинета */
+    window.switchProfileTab = function (tabName) {
+      document.getElementById('tabOverview').hidden = tabName !== 'overview';
+      document.getElementById('tabSettings').hidden = tabName !== 'settings';
+      document.querySelectorAll('.tab-btn').forEach((btn) => {
+        btn.classList.toggle('active', btn.dataset.tab === tabName);
+      });
+    };
+
+    /* Получение и сохранение кастомных данных профиля (аватар, шапка, имя, активность) */
+    function getProfileMeta(key) {
+      try {
+        return JSON.parse(localStorage.getItem('pp3d_profile_' + key) || '{}');
+      } catch (e) {
+        return {};
+      }
+    }
+
+    function saveProfileMeta(key, data) {
+      const current = getProfileMeta(key);
+      const updated = Object.assign({}, current, data);
+      localStorage.setItem('pp3d_profile_' + key, JSON.stringify(updated));
+      return updated;
+    }
+
+    /* Расчёт рейтинга и персональной скидки от заказов и активности */
+    function updateLoyaltyAndDiscount(key, ordersCount, cartCount, visitsCount) {
+      const xp = 100 + (ordersCount * 150) + (cartCount * 25) + (visitsCount * 15);
+      let discount = 3;
+      let tier = 'Старт';
+      let rating = 4.3;
+      let stars = '★★★★☆';
+      let nextTierText = '';
+      let progressPct = 18;
+
+      if (xp >= 1000) {
+        discount = 15;
+        tier = 'VIP Мастер';
+        rating = 5.0;
+        stars = '★★★★★';
+        nextTierText = 'Максимальный уровень достигнут!';
+        progressPct = 100;
+      } else if (xp >= 500) {
+        discount = 10;
+        tier = 'Инженер 3D';
+        rating = 4.9;
+        stars = '★★★★★';
+        nextTierText = `До уровня VIP Мастер (15%): ${1000 - xp} XP`;
+        progressPct = 66 + Math.round(((xp - 500) / 500) * 34);
+      } else if (xp >= 200) {
+        discount = 5;
+        tier = 'Активный клиент';
+        rating = 4.7;
+        stars = '★★★★★';
+        nextTierText = `До уровня Инженер 3D (10%): ${500 - xp} XP`;
+        progressPct = 33 + Math.round(((xp - 200) / 300) * 33);
+      } else {
+        discount = 3;
+        tier = 'Старт';
+        rating = 4.4;
+        stars = '★★★★☆';
+        nextTierText = `До уровня Активный (5%): ${200 - xp} XP`;
+        progressPct = Math.max(12, Math.round((xp / 200) * 33));
+      }
+
+      localStorage.setItem('pp3d_user_discount', String(discount));
+
+      document.getElementById('pDiscountVal').textContent = discount;
+      document.getElementById('pDiscountTier').textContent = `Уровень: ${tier} • ★ ${rating.toFixed(1)}`;
+      document.getElementById('pRatingBadge').textContent = `★ ${rating.toFixed(1)} • ${xp} XP`;
+      document.getElementById('loyaltyDiscountBig').textContent = `${discount}%`;
+      document.getElementById('loyaltyStatusText').textContent = `Статус: ${tier}`;
+      document.getElementById('loyaltyStars').textContent = stars;
+      document.getElementById('loyaltyScoreText').textContent = `Рейтинг профиля: ${rating.toFixed(1)} из 5.0`;
+      document.getElementById('loyaltyXp').textContent = `${xp} XP`;
+      document.getElementById('loyaltyNextTier').textContent = nextTierText;
+      document.getElementById('loyaltyProgressFill').style.width = `${progressPct}%`;
+    }
+
+    /* Отрисовка аватара (180x180) и шапки (896x100) */
+    function renderMedia(meta) {
+      const avatarImg = document.getElementById('avatarImg');
+      const avatarEmoji = document.getElementById('avatarEmoji');
+      if (meta.avatarDataUrl) {
+        avatarImg.src = meta.avatarDataUrl;
+        avatarImg.hidden = false;
+        avatarEmoji.hidden = true;
+      } else {
+        avatarImg.hidden = true;
+        avatarEmoji.hidden = false;
+      }
+
+      const bannerImg = document.getElementById('bannerImg');
+      if (meta.bannerDataUrl) {
+        bannerImg.src = meta.bannerDataUrl;
+        bannerImg.hidden = false;
+      } else {
+        bannerImg.hidden = true;
+      }
+    }
+
+    /* Кадрирование изображения через Canvas для надёжного хранения в localStorage */
+    function resizeImageFile(file, targetW, targetH, callback) {
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const img = new Image();
+        img.onload = function () {
+          const canvas = document.createElement('canvas');
+          canvas.width = targetW;
+          canvas.height = targetH;
+          const ctx = canvas.getContext('2d');
+          const scale = Math.max(targetW / img.width, targetH / img.height);
+          const sw = targetW / scale;
+          const sh = targetH / scale;
+          const sx = (img.width - sw) / 2;
+          const sy = (img.height - sh) / 2;
+          ctx.drawImage(img, sx, sy, sw, sh, 0, 0, targetW, targetH);
+          callback(canvas.toDataURL('image/jpeg', 0.88));
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    /* Обработчик загрузки Аватара (180x180px, Retina 360x360px) */
+    document.getElementById('avatarInput').addEventListener('change', function (e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      if (file.size > 5 * 1024 * 1024) {
+        alert('Максимальный размер файла — 5 МБ.');
+        return;
+      }
+      resizeImageFile(file, 360, 360, function (dataUrl) {
+        const meta = saveProfileMeta(currentUserKey, { avatarDataUrl: dataUrl });
+        renderMedia(meta);
+      });
+    });
+
+    window.resetAvatar = function () {
+      const meta = saveProfileMeta(currentUserKey, { avatarDataUrl: null });
+      renderMedia(meta);
+    };
+
+    /* Обработчик загрузки Шапки профиля (896x100px, до 5 МБ) */
+    document.getElementById('bannerInput').addEventListener('change', function (e) {
+      const file = e.target.files[0];
+      const statusEl = document.getElementById('bannerStatus');
+      if (!file) return;
+
+      const maxBytes = 5 * 1024 * 1024; // 5 МБ
+      if (file.size > maxBytes) {
+        statusEl.textContent = '❌ Ошибка: размер файла превышает 5 МБ!';
+        statusEl.style.color = '#f87171';
+        this.value = '';
+        return;
+      }
+
+      resizeImageFile(file, 896, 100, function (dataUrl) {
+        const meta = saveProfileMeta(currentUserKey, { bannerDataUrl: dataUrl });
+        renderMedia(meta);
+        statusEl.textContent = `✓ Шапка 896×100 px успешно загружена (${(file.size / 1024 / 1024).toFixed(2)} МБ)`;
+        statusEl.style.color = '#34d399';
+      });
+    });
+
+    window.resetBanner = function () {
+      const meta = saveProfileMeta(currentUserKey, { bannerDataUrl: null });
+      renderMedia(meta);
+      const statusEl = document.getElementById('bannerStatus');
+      statusEl.textContent = 'Шапка сброшена к стандартному фону (896×100 px)';
+      statusEl.style.color = '';
+    };
+
+    /* Сохранение нового имени пользователя */
+    window.saveUserName = function (e) {
+      e.preventDefault();
+      const input = document.getElementById('inputUserName');
+      const newName = input.value.trim();
+      if (!newName) return;
+
+      saveProfileMeta(currentUserKey, { customName: newName });
+      document.getElementById('pName').textContent = newName;
+      document.getElementById('pInfoName').textContent = newName;
+
+      const msg = document.getElementById('nameSaveMsg');
+      msg.hidden = false;
+      setTimeout(() => { msg.hidden = true; }, 2500);
+    };
+
+    /* Инициализация личного кабинета */
     (async function initProfile() {
-      const loggedIn = await AUTH.isLoggedIn();
-      if (!loggedIn) { window.location.href = 'login.html'; return; }
-      const user = await AUTH.currentUser();
+      let user = null;
+      if (typeof AUTH !== 'undefined') {
+        const loggedIn = await AUTH.isLoggedIn();
+        if (!loggedIn) { window.location.href = 'login.html'; return; }
+        user = await AUTH.currentUser();
+      }
       if (!user) { window.location.href = 'login.html'; return; }
-      document.getElementById('pName').textContent = user.name;
-      document.getElementById('pEmail').textContent = user.email;
-      document.getElementById('pPhone').textContent = user.phone || '—';
-      document.getElementById('pDate').textContent = user.createdAt
-        ? new Date(user.createdAt).toLocaleDateString('ru-RU') : '—';
-      document.getElementById('pOrdersCount').textContent = '0';
-      document.getElementById('ordersList').innerHTML =
-        '<div class="empty-orders">История заказов появится после подключения базы заказов</div>';
+
+      currentUserObj = user;
+      currentUserKey = (user.email || user.id || 'user').toLowerCase();
+
+      const meta = getProfileMeta(currentUserKey);
+      const visits = (meta.visits || 0) + 1;
+      saveProfileMeta(currentUserKey, { visits });
+
+      const displayName = meta.customName || user.name || 'Пользователь';
+      const displayEmail = user.email || '—';
+      const displayPhone = user.phone || 'Не указан при регистрации';
+      const displayDate = user.createdAt
+        ? new Date(user.createdAt).toLocaleDateString('ru-RU')
+        : '—';
+
+      document.getElementById('pName').textContent = displayName;
+      document.getElementById('pInfoName').textContent = displayName;
+      document.getElementById('inputUserName').value = displayName;
+
+      document.getElementById('pEmail').textContent = displayEmail;
+      document.getElementById('pInfoEmail').textContent = displayEmail;
+
+      document.getElementById('pPhoneCard').textContent = displayPhone;
+      document.getElementById('pPhone').textContent = displayPhone;
+      document.getElementById('readonlyPhone').value = displayPhone;
+
+      document.getElementById('pDate').textContent = displayDate;
+
+      const cart = JSON.parse(localStorage.getItem('pp3d_cart') || '[]');
+      const cartCount = cart.reduce((s, i) => s + (i.qty || 1), 0);
+      const orders = JSON.parse(localStorage.getItem('pp3d_orders_' + currentUserKey) || '[]');
+      const ordersCount = orders.length;
+
+      document.getElementById('pOrdersCount').textContent = `${ordersCount} заказ(ов) / ${cartCount} в корзине`;
+
+      renderMedia(meta);
+      updateLoyaltyAndDiscount(currentUserKey, ordersCount, cartCount, visits);
+
+      const ordersListEl = document.getElementById('ordersList');
+      if (ordersCount > 0) {
+        ordersListEl.innerHTML = orders.map((o) => `
+          <div class="order-item">
+            <div>
+              <div class="order-id">Заказ #${o.id}</div>
+              <div class="order-date">${o.date}</div>
+            </div>
+            <div class="order-sum">${Number(o.sum).toLocaleString('ru-RU')} ₽</div>
+          </div>
+        `).join('');
+      } else {
+        ordersListEl.innerHTML = '<div class="empty-orders">История заказов появится после оформления первого заказа</div>';
+      }
     })();
   </script>
 </body>
