@@ -68,7 +68,7 @@
               <div class="promo-icon">🛡️</div>
               <div>
                 <div class="promo-item-title">Анонимное восстановление пароля</div>
-                <div class="promo-item-text">Новый пароль скрыт от посторонних глаз: он отправляется закрытым письмом на ваш E-mail и дублируется в SMS на привязанный телефон.</div>
+                <div class="promo-item-text">Для восстановления доступа на Email отправляется одноразовая ссылка для установки нового пароля.</div>
               </div>
             </div>
             <div class="promo-item">
@@ -83,7 +83,7 @@
 
         <div class="promo-footer-badge">
           <span class="pulse-dot"></span>
-          <span>Защищённая двухканальная отправка (E-mail + SMS)</span>
+          <span>Восстановление доступа по Email</span>
         </div>
       </div>
 
@@ -98,13 +98,13 @@
         <div class="error-msg" id="errorBox"></div>
 
         <div class="form-group">
-          <label for="email">Email или номер телефона</label>
+          <label for="email">Email</label>
           <div class="input-wrap">
             <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
               <polyline points="22,6 12,13 2,6"></polyline>
             </svg>
-            <input type="text" id="email" placeholder="you@example.com или 89289699985" autocomplete="username">
+            <input type="text" id="email" placeholder="you@example.com" autocomplete="username">
           </div>
         </div>
 
@@ -154,7 +154,7 @@
 
         <!-- Блок статуса анонимной доставки (без показа самого пароля) -->
         <div class="delivery-status" id="deliveryStatusBox" hidden>
-          <div class="delivery-header">✅ Новый пароль успешно отправлен</div>
+          <div class="delivery-header">✅ Письмо для восстановления отправлено</div>
           <div class="channel-row">
             <span class="channel-icon">📧</span>
             <div class="channel-info">
@@ -472,8 +472,6 @@
       const currentInput = document.getElementById('email').value.trim();
       if (currentInput.includes('@')) {
         document.getElementById('recoverEmail').value = currentInput;
-      } else if (currentInput.replace(/\D/g, '').length >= 10) {
-        document.getElementById('recoverPhone').value = currentInput;
       }
 
       window.location.hash = 'recover';
