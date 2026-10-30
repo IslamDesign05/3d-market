@@ -54,14 +54,14 @@
         <div>
           <span class="section-kicker">Безопасность и доступ</span>
           <h2>Личный кабинет <span>3D Print Studio</span></h2>
-          <p class="promo-desc">Войдите по своему Email или номеру телефона, чтобы отслеживать заказы, статус 3D-печати и сохранённые расчёты.</p>
+          <p class="promo-desc">Войдите по своему Email, чтобы отслеживать заказы, статус 3D-печати и сохранённые расчёты.</p>
 
           <div class="promo-features">
             <div class="promo-item">
               <div class="promo-icon">🔐</div>
               <div>
-                <div class="promo-item-title">Вход по Email или телефону</div>
-                <div class="promo-item-text">Используйте удобный для вас способ авторизации в один клик.</div>
+                <div class="promo-item-title">Вход по Email</div>
+                <div class="promo-item-text">Используйте Email и пароль для входа в личный кабинет.</div>
               </div>
             </div>
             <div class="promo-item">
@@ -147,7 +147,7 @@
         <div class="auth-card-header">
           <div class="auth-icon-badge">🔐</div>
           <h1>Восстановление пароля</h1>
-          <p class="sub">Укажите ваш E-mail и привязанный номер телефона. Новый пароль будет отправлен на почту и продублирован в SMS.</p>
+          <p class="sub">Укажите Email, на него придёт безопасная ссылка для создания нового пароля.</p>
         </div>
 
         <div class="error-msg" id="recoverErrorBox"></div>
@@ -158,21 +158,21 @@
           <div class="channel-row">
             <span class="channel-icon">📧</span>
             <div class="channel-info">
-              <div class="channel-title">Письмо отправлено на E-mail</div>
+              <div class="channel-title">Письмо отправлено на Email</div>
               <div class="channel-target" id="maskedEmailTarget">***@***</div>
             </div>
             <span class="channel-badge">Отправлено</span>
           </div>
           <div class="channel-row">
-            <span class="channel-icon">📱</span>
+            <span class="channel-icon">🔐</span>
             <div class="channel-info">
-              <div class="channel-title">Пароль продублирован в SMS</div>
-              <div class="channel-target" id="maskedPhoneTarget">+7 (***) ***-**-**</div>
+              <div class="channel-title">Следующий шаг</div>
+              <div class="channel-target" id="maskedPhoneTarget">Откройте ссылку в письме</div>
             </div>
-            <span class="channel-badge">Доставлено</span>
+            <span class="channel-badge">Email</span>
           </div>
           <div class="delivery-note">
-            В целях безопасности пароль не отображается на сайте. Проверьте входящие сообщения на почте или в телефоне.
+            Откройте письмо и перейдите по ссылке, чтобы задать новый пароль.
           </div>
         </div>
 
@@ -187,29 +187,19 @@
           </div>
         </div>
 
-        <div class="form-group">
-          <label for="recoverPhone">Привязанный номер телефона</label>
-          <div class="input-wrap">
-            <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
-            </svg>
-            <input type="tel" id="recoverPhone" placeholder="+7 (928) 969-99-85" autocomplete="tel">
-          </div>
-        </div>
-
         <!-- 2 кнопки под формой ввода -->
         <div class="recover-buttons-group">
           <button type="button" class="btn btn-primary btn-submit" id="btnSendPrimary" onclick="handleRecoverPassword()">
-            <span>✉️ Выслать пароль на почту и в SMS</span>
+            <span>✉️ Отправить ссылку для сброса пароля</span>
           </button>
 
           <button type="button" class="btn btn-accent btn-submit" id="btnSendResend" onclick="handleRecoverPassword()">
-            <span>📲 Выслать пароль на почту повторно</span>
+            <span>📲 Отправить письмо повторно</span>
           </button>
         </div>
 
         <div class="auth-footer">
-          Получили новый пароль? <a href="#login" onclick="openLoginPage(event)">← Вернуться ко входу</a>
+          Уже восстановили доступ? <a href="#login" onclick="openLoginPage(event)">← Вернуться ко входу</a>
         </div>
       </div>
 
@@ -220,6 +210,7 @@
     © 2026 3D Print Studio. Все права защищены.
   </footer>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="auth.js"></script>
   <script>
     // Показать/скрыть вводимый пароль на форме входа
@@ -244,8 +235,6 @@
       const currentInput = document.getElementById('email').value.trim();
       if (currentInput.includes('@')) {
         document.getElementById('recoverEmail').value = currentInput;
-      } else if (currentInput.replace(/\D/g, '').length >= 10) {
-        document.getElementById('recoverPhone').value = currentInput;
       }
 
       window.location.hash = 'recover';
@@ -265,7 +254,7 @@
     }
 
     // Обработка входа
-    function handleLogin() {
+    async function handleLogin() {
       const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value;
       const err = document.getElementById('errorBox');
@@ -276,7 +265,7 @@
         return;
       }
 
-      const res = AUTH.login(email, password);
+      const res = await AUTH.login(email, password);
       if (!res.ok) {
         err.textContent = '⚠️ ' + res.error;
         err.style.display = 'block';
@@ -286,10 +275,9 @@
       window.location.href = 'profile.html';
     }
 
-    // Анонимное восстановление пароля (отправка на E-mail + дублирование в SMS)
+    // Безопасное восстановление пароля по одноразовой ссылке на Email
     async function handleRecoverPassword() {
       const email = document.getElementById('recoverEmail').value.trim();
-      const phone = document.getElementById('recoverPhone').value.trim();
       const errBox = document.getElementById('recoverErrorBox');
       const statusBox = document.getElementById('deliveryStatusBox');
       const btnPrimary = document.getElementById('btnSendPrimary');
@@ -297,17 +285,17 @@
       errBox.style.display = 'none';
       statusBox.hidden = true;
 
-      if (!email || !phone) {
-        errBox.textContent = '⚠️ Заполните и E-Mail, и номер телефона';
+      if (!email) {
+        errBox.textContent = '⚠️ Укажите адрес Email';
         errBox.style.display = 'block';
         return;
       }
 
       const origText = btnPrimary.innerHTML;
       btnPrimary.disabled = true;
-      btnPrimary.innerHTML = '<span>⏳ Отправка на почту и телефон...</span>';
+      btnPrimary.innerHTML = '<span>⏳ Отправка письма...</span>';
 
-      const res = await AUTH.recoverPassword(email, phone);
+      const res = await AUTH.recoverPassword(email);
 
       btnPrimary.disabled = false;
       btnPrimary.innerHTML = origText;
@@ -318,9 +306,9 @@
         return;
       }
 
-      // Отображаем только замаскированный статус отправки (пароль полностью скрыт)
-      document.getElementById('maskedEmailTarget').textContent = res.maskedEmail;
-      document.getElementById('maskedPhoneTarget').textContent = res.maskedPhone;
+      // Показываем подтверждение отправки письма
+      document.getElementById('maskedEmailTarget').textContent = email;
+      document.getElementById('maskedPhoneTarget').textContent = 'Проверьте почту';
       statusBox.hidden = false;
     }
 
