@@ -1,0 +1,88 @@
+name: 3D-Market backups
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 3 * * *"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: 3d-market-backups
+  cancel-in-progress: false
+
+jobs:
+  repository:
+    name: Back up source code and Git history
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out complete repository history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Create repository backups
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p backup-output
+          git bundle create backup-output/3d-market-all-refs.bundle --all
+          git archive --format=tar.gz --output=backup-output/3d-market-source.tar.gz HEAD
+          (
+            cd backup-output
+            sha256sum 3d-market-all-refs.bundle 3d-market-source.tar.gz > SHA256SUMS
+          )
+
+      - name: Upload repository backup
+        uses: actions/upload-artifact@v4
+        with:
+          name: 3d-market-repository-${{ github.run_id }}
+          path: backup-output/
+          if-no-files-found: error
+          retention-days: 90
+
+  database:
+    name: Back up Supabase PostgreSQL database
+    runs-on: ubuntu-latest
+    if: ${{ secrets.SUPABASE_DB_URL != '' && secrets.BACKUP_ENCRYPTION_PASSPHRASE != '' }}
+    steps:
+      - name: Install PostgreSQL client and GnuPG
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client gnupg
+
+      - name: Create and encrypt database dump
+        env:
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+          BACKUP_ENCRYPTION_PASSPHRASE: ${{ secrets.BACKUP_ENCRYPTION_PASSPHRASE }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p backup-output
+          pg_dump --version
+          pg_dump "$SUPABASE_DB_URL" --no-owner --no-acl --format=custom --file=backup-output/supabase-database.dump
+          gpg --batch --yes --symmetric --cipher-algo AES256 \
+            --passphrase "$BACKUP_ENCRYPTION_PASSPHRASE" \
+            --output backup-output/supabase-database.dump.gpg \
+            backup-output/supabase-database.dump
+          rm -f backup-output/supabase-database.dump
+          cd backup-output
+          sha256sum supabase-database.dump.gpg > SHA256SUMS
+
+      - name: Upload encrypted database backup
+        uses: actions/upload-artifact@v4
+        with:
+          name: 3d-market-supabase-db-${{ github.run_id }}
+          path: backup-output/
+          if-no-files-found: error
+          retention-days: 90
+
+  database-not-configured:
+    name: Explain database backup setup
+    runs-on: ubuntu-latest
+    if: ${{ secrets.SUPABASE_DB_URL == '' || secrets.BACKUP_ENCRYPTION_PASSPHRASE == '' }}
+    steps:
+      - name: Show setup notice
+        run: |
+          echo "::notice::Repository backup will run, but Supabase database backup is skipped until SUPABASE_DB_URL and BACKUP_ENCRYPTION_PASSPHRASE are configured in GitHub Actions secrets."
