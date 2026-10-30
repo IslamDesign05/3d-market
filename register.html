@@ -157,6 +157,7 @@
     © 2026 3D Print Studio. Все права защищены.
   </footer>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="auth.js"></script>
   <script>
     function togglePassword() {
@@ -190,7 +191,7 @@
       }
     }
 
-    function handleRegister() {
+    async function handleRegister() {
       const name = document.getElementById('name').value.trim();
       const email = document.getElementById('email').value.trim();
       const phone = document.getElementById('phone').value.trim();
@@ -208,13 +209,18 @@
         return;
       }
 
-      const res = AUTH.register(name, email, phone, password);
+      const res = await AUTH.register(name, email, phone, password);
       if (!res.ok) {
         err.textContent = '⚠️ ' + res.error;
         err.style.display = 'block';
         return;
       }
 
+      if (res.needsEmailConfirmation) {
+        err.style.display = 'block';
+        err.textContent = '✅ Аккаунт создан! Подтвердите Email по ссылке из письма, затем войдите в аккаунт.';
+        return;
+      }
       window.location.href = 'profile.html';
     }
 
