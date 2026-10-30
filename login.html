@@ -275,10 +275,9 @@
       window.location.href = 'profile.html';
     }
 
-    // Анонимное восстановление пароля (отправка на E-mail + дублирование в SMS)
+    // Безопасное восстановление пароля по одноразовой ссылке на Email
     async function handleRecoverPassword() {
       const email = document.getElementById('recoverEmail').value.trim();
-      const phone = '';
       const errBox = document.getElementById('recoverErrorBox');
       const statusBox = document.getElementById('deliveryStatusBox');
       const btnPrimary = document.getElementById('btnSendPrimary');
@@ -294,7 +293,7 @@
 
       const origText = btnPrimary.innerHTML;
       btnPrimary.disabled = true;
-      btnPrimary.innerHTML = '<span>⏳ Отправка на почту и телефон...</span>';
+      btnPrimary.innerHTML = '<span>⏳ Отправка письма...</span>';
 
       const res = await AUTH.recoverPassword(email);
 
@@ -308,7 +307,7 @@
       }
 
       // Показываем подтверждение отправки письма
-      document.getElementById('maskedEmailTarget').textContent = res.maskedEmail;
+      document.getElementById('maskedEmailTarget').textContent = email;
       document.getElementById('maskedPhoneTarget').textContent = 'Проверьте почту';
       statusBox.hidden = false;
     }
