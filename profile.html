@@ -95,32 +95,20 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="auth.js"></script>
   <script>
-    // Защита: если не авторизован — на вход
-    if (!AUTH.isLoggedIn()) {
-      window.location.href = 'login.html';
-    }
-
-    const user = AUTH.currentUser();
-    if (user) {
+    (async function initProfile() {
+      const loggedIn = await AUTH.isLoggedIn();
+      if (!loggedIn) { window.location.href = 'login.html'; return; }
+      const user = await AUTH.currentUser();
+      if (!user) { window.location.href = 'login.html'; return; }
       document.getElementById('pName').textContent = user.name;
       document.getElementById('pEmail').textContent = user.email;
-      document.getElementById('pPhone').textContent = user.phone;
-      document.getElementById('pDate').textContent = new Date(user.createdAt).toLocaleDateString('ru-RU');
-      document.getElementById('pOrdersCount').textContent = (user.orders || []).length;
-
-      const list = document.getElementById('ordersList');
-      if (user.orders && user.orders.length > 0) {
-        list.innerHTML = user.orders.map(o => `
-          <div class="order-item">
-            <div>
-              <div class="order-id">Заказ ${o.id.slice(-6)}</div>
-              <div class="order-date">${o.date}</div>
-            </div>
-            <div class="order-sum">${o.total || '—'} ₽</div>
-          </div>
-        `).join('');
-      }
-    }
+      document.getElementById('pPhone').textContent = user.phone || '—';
+      document.getElementById('pDate').textContent = user.createdAt
+        ? new Date(user.createdAt).toLocaleDateString('ru-RU') : '—';
+      document.getElementById('pOrdersCount').textContent = '0';
+      document.getElementById('ordersList').innerHTML =
+        '<div class="empty-orders">История заказов появится после подключения базы заказов</div>';
+    })();
   </script>
 </body>
 </html>
