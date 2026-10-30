@@ -164,12 +164,12 @@
             <span class="channel-badge">Отправлено</span>
           </div>
           <div class="channel-row">
-            <span class="channel-icon">📱</span>
+            <span class="channel-icon">🔐</span>
             <div class="channel-info">
-              <div class="channel-title">Ссылка для сброса пароля</div>
-              <div class="channel-target" id="maskedPhoneTarget">+7 (***) ***-**-**</div>
+              <div class="channel-title">Следующий шаг</div>
+              <div class="channel-target" id="maskedPhoneTarget">Откройте ссылку в письме</div>
             </div>
-            <span class="channel-badge">Доставлено</span>
+            <span class="channel-badge">Email</span>
           </div>
           <div class="delivery-note">
             Откройте письмо и перейдите по ссылке, чтобы задать новый пароль.
@@ -187,16 +187,6 @@
           </div>
         </div>
 
-        <div class="form-group">
-          <label for="recoverPhone">Привязанный номер телефона</label>
-          <div class="input-wrap">
-            <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
-            </svg>
-            <input type="tel" id="recoverPhone" placeholder="+7 (928) 969-99-85" autocomplete="tel">
-          </div>
-        </div>
-
         <!-- 2 кнопки под формой ввода -->
         <div class="recover-buttons-group">
           <button type="button" class="btn btn-primary btn-submit" id="btnSendPrimary" onclick="handleRecoverPassword()">
@@ -209,7 +199,7 @@
         </div>
 
         <div class="auth-footer">
-          Получили новый пароль? <a href="#login" onclick="openLoginPage(event)">← Вернуться ко входу</a>
+          Уже восстановили доступ? <a href="#login" onclick="openLoginPage(event)">← Вернуться ко входу</a>
         </div>
       </div>
 
