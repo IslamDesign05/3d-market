@@ -1,0 +1,104 @@
+name: 3D-Market backups
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 3 * * *"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: 3d-market-backups
+  cancel-in-progress: false
+
+jobs:
+  repository:
+    name: Back up source code and Git history
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out complete repository history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Create repository backups
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p backup-output
+          git bundle create backup-output/3d-market-all-refs.bundle --all
+          git archive --format=tar.gz --output=backup-output/3d-market-source.tar.gz HEAD
+          (
+            cd backup-output
+            sha256sum 3d-market-all-refs.bundle 3d-market-source.tar.gz > SHA256SUMS
+          )
+
+      - name: Upload repository backup
+        uses: actions/upload-artifact@v4
+        with:
+          name: 3d-market-repository-${{ github.run_id }}
+          path: backup-output/
+          if-no-files-found: error
+          retention-days: 90
+
+  database:
+    name: Back up Supabase PostgreSQL database
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check whether database backup secrets are configured
+        id: secrets-check
+        env:
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+          BACKUP_ENCRYPTION_PASSPHRASE: ${{ secrets.BACKUP_ENCRYPTION_PASSPHRASE }}
+        shell: bash
+        run: |
+          if [[ -n "$SUPABASE_DB_URL" && -n "$BACKUP_ENCRYPTION_PASSPHRASE" ]]; then
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Install PostgreSQL client and GnuPG
+        if: steps.secrets-check.outputs.enabled == 'true'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y curl ca-certificates gnupg
+          sudo install -d /usr/share/postgresql-common/pgdg
+          curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo gpg --dearmor -o /usr/share/postgresql-common/pgdg/apt.postgresql.org.gpg
+          echo "deb [signed-by=/usr/share/postgresql-common/pgdg/apt.postgresql.org.gpg] http://apt.postgresql.org/pub/repos/apt $(. /etc/os-release && echo "$VERSION_CODENAME")-pgdg main" | sudo tee /etc/apt/sources.list.d/pgdg.list
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client-18
+
+      - name: Create and encrypt database dump
+        if: steps.secrets-check.outputs.enabled == 'true'
+        env:
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+          BACKUP_ENCRYPTION_PASSPHRASE: ${{ secrets.BACKUP_ENCRYPTION_PASSPHRASE }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p backup-output
+          pg_dump --version
+          pg_dump "$SUPABASE_DB_URL" --no-owner --no-acl --format=custom --file=backup-output/supabase-database.dump
+          gpg --batch --yes --symmetric --cipher-algo AES256 \
+            --passphrase "$BACKUP_ENCRYPTION_PASSPHRASE" \
+            --output backup-output/supabase-database.dump.gpg \
+            backup-output/supabase-database.dump
+          rm -f backup-output/supabase-database.dump
+          cd backup-output
+          sha256sum supabase-database.dump.gpg > SHA256SUMS
+
+      - name: Upload encrypted database backup
+        if: steps.secrets-check.outputs.enabled == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: 3d-market-supabase-db-${{ github.run_id }}
+          path: backup-output/
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Explain database backup setup
+        if: steps.secrets-check.outputs.enabled != 'true'
+        run: |
+          echo "::notice::Repository backup will run, but Supabase database backup is skipped until SUPABASE_DB_URL and BACKUP_ENCRYPTION_PASSPHRASE are configured in GitHub Actions secrets."
