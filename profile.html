@@ -9,10 +9,9 @@
 </head>
 <body>
 
-  <!-- Фоновая технологичная сетка как на главной -->
   <div class="bg-grid" aria-hidden="true"></div>
 
-  <!-- ═════ НАВИГАЦИЯ (СИНХРОНИЗИРОВАНА С INDEX.HTML) ═════ -->
+  <!-- ═════ НАВИГАЦИЯ ═════ -->
   <nav class="nav">
     <a href="index.html" class="logo">
       <span class="badge-icon">◈</span>
@@ -31,7 +30,7 @@
   <!-- ═════ ОСНОВНОЙ КОНТЕЙНЕР КАБИНЕТА ═════ -->
   <main class="container">
 
-    <!-- Верхняя панель заголовка и переключения вкладок -->
+    <!-- Верхняя панель заголовка и вкладок (вместо текста настроек — только шестерёнка) -->
     <div class="profile-topbar">
       <div>
         <span class="section-kicker">Аккаунт клиента</span>
@@ -41,19 +40,19 @@
         <button class="tab-btn active" type="button" data-tab="overview" onclick="switchProfileTab('overview')">
           📊 Обзор и заказы
         </button>
-        <button class="tab-btn" type="button" data-tab="settings" onclick="switchProfileTab('settings')">
-          ⚙️ Настройки профиля
+        <button class="tab-btn tab-btn--icon" type="button" data-tab="settings" onclick="switchProfileTab('settings')" title="Настройки профиля" aria-label="Настройки профиля">
+          ⚙️
         </button>
       </div>
     </div>
 
-    <!-- ═════ ШАПКА ПРОФИЛЯ (896x100px) ═════ -->
+    <!-- ═════ ШАПКА ПРОФИЛЯ (ПО ШИРИНЕ PROFILE-GRID, ВЫСОТА 200px) ═════ -->
     <div class="profile-banner-wrap">
       <div class="profile-banner" id="profileBanner">
-        <img id="bannerImg" class="banner-img" alt="Шапка профиля 896x100" hidden>
+        <img id="bannerImg" class="banner-img" alt="Шапка профиля" hidden>
         <div class="banner-overlay">
-          <span class="banner-size-badge">Шапка профиля • 896×100 px</span>
-          <button class="banner-edit-btn" type="button" onclick="switchProfileTab('settings')">
+          <span class="banner-size-badge">Шапка профиля • Высота 200 px (до 5 МБ)</span>
+          <button class="banner-edit-btn" type="button" onclick="switchProfileTab('settings')" title="Настроить шапку">
             🖼️ Изменить шапку
           </button>
         </div>
@@ -83,7 +82,7 @@
             <span id="pPhoneCard">—</span>
           </div>
 
-          <!-- Бейдж персональной скидки под номером телефона -->
+          <!-- Бейдж персональной скидки -->
           <div class="discount-pill" id="discountPill">
             <div class="discount-pill-label">Персональная скидка</div>
             <div class="discount-pill-value"><span id="pDiscountVal">3</span>%</div>
@@ -103,7 +102,6 @@
         <!-- ВКЛАДКА 1: ОБЗОР, РЕЙТИНГ, СКИДКИ И ЗАКАЗЫ -->
         <div id="tabOverview" class="tab-pane">
 
-          <!-- Панель рейтинга и системы скидок -->
           <div class="panel loyalty-panel">
             <div class="panel-header-flex">
               <h3>🏆 Система рейтинга и скидок</h3>
@@ -128,7 +126,6 @@
               </div>
             </div>
 
-            <!-- Прогресс-бар уровней скидки -->
             <div class="progress-wrap">
               <div class="progress-labels">
                 <span>Старт (3%)</span>
@@ -145,7 +142,6 @@
             </div>
           </div>
 
-          <!-- Панель общей информации -->
           <div class="panel">
             <h3>📋 Информация об аккаунте</h3>
             <div class="stat-row">
@@ -157,7 +153,7 @@
               <span class="stat-value" id="pInfoEmail">—</span>
             </div>
             <div class="stat-row">
-              <span class="stat-label">Телефон (при регистрации)</span>
+              <span class="stat-label">Номер телефона</span>
               <span class="stat-value" id="pPhone">—</span>
             </div>
             <div class="stat-row">
@@ -170,7 +166,6 @@
             </div>
           </div>
 
-          <!-- Панель истории заказов -->
           <div class="panel">
             <h3>📦 История заказов</h3>
             <div id="ordersList">
@@ -180,14 +175,14 @@
 
         </div>
 
-        <!-- ВКЛАДКА 2: НАСТРОЙКИ ПРОФИЛЯ -->
+        <!-- ВКЛАДКА 2: НАСТРОЙКИ ПРОФИЛЯ (ОТКРЫВАЕТСЯ ПО ИКОНКЕ ⚙️) -->
         <div id="tabSettings" class="tab-pane" hidden>
 
-          <!-- 1) Настройка шапки профиля 896x100px до 5 МБ и аватарки -->
+          <!-- 1) Настройка шапки профиля (высота 200px, до 5 МБ) и аватара -->
           <div class="panel">
-            <h3>🖼️ 1. Шапка профиля (896×100 px) и аватар</h3>
+            <h3>🖼️ 1. Шапка профиля (высота 200 px) и аватар</h3>
             <p class="settings-desc">
-              Загрузите изображение для шапки профиля (рекомендуемый размер <b>896×100 px</b>, максимальный вес файла — <b>до 5 МБ</b>, форматы JPG, PNG, WebP).
+              Загрузите изображение для шапки профиля (растягивается по ширине кабинета, высота <b>200 px</b>, максимальный вес файла — <b>до 5 МБ</b>).
             </p>
 
             <div class="banner-upload-box">
@@ -200,7 +195,7 @@
                   Сбросить шапку
                 </button>
               </div>
-              <div class="upload-status" id="bannerStatus">Размер шапки: 896×100 px • Макс. 5 МБ</div>
+              <div class="upload-status" id="bannerStatus">Высота шапки: 200 px • Макс. размер: 5 МБ</div>
             </div>
 
             <div class="avatar-settings-row">
@@ -221,8 +216,8 @@
 
           <!-- 2) Изменение имени пользователя -->
           <div class="panel">
-            <h3>✏️ 2. Изменение имени пользователя</h3>
-            <p class="settings-desc">Вы можете в любой момент изменить отображаемое имя вашего профиля.</p>
+            <h3>✏️ 2. Имя пользователя</h3>
+            <p class="settings-desc">Измените отображаемое имя вашего профиля в личном кабинете.</p>
             <form class="settings-form" onsubmit="saveUserName(event)">
               <div class="form-group">
                 <label for="inputUserName">Имя пользователя</label>
@@ -235,18 +230,59 @@
             </form>
           </div>
 
-          <!-- 3) Вкладка/блок с номером телефона без возможности изменять -->
+          <!-- 3) ОБЪЕДИНЁННАЯ ПАНЕЛЬ: Смена E-mail (с подтверждением по почте) + под ней .form-group Номера телефона (с СМС-подтверждением) -->
           <div class="panel">
-            <h3>🔒 3. Привязанный номер телефона</h3>
+            <h3>🔐 3. Контактные данные и подтверждение</h3>
             <p class="settings-desc">
-              Номер телефона указывается один раз при регистрации аккаунта и используется для подтверждения заказов. Изменение номера заблокировано в целях безопасности.
+              Для безопасности аккаунта смена электронной почты подтверждается кодом на E-mail, а смена номера телефона — СМС-кодом.
             </p>
+
+            <!-- Блок смены E-mail -->
             <div class="form-group">
-              <label for="readonlyPhone">Номер телефона (только чтение)</label>
-              <div class="locked-input-wrap">
-                <input type="tel" id="readonlyPhone" class="form-input form-input--locked" value="—" readonly disabled>
-                <span class="lock-badge">🔒 Неизменяемый</span>
+              <label for="inputEmail">Электронная почта (E-mail)</label>
+              <div class="input-action-row">
+                <input type="email" id="inputEmail" class="form-input" placeholder="Введите новый E-mail" required>
+                <button type="button" class="btn btn-primary" onclick="requestEmailVerification()">
+                  📧 Выслать код на почту
+                </button>
               </div>
+
+              <!-- Поле ввода кода подтверждения E-mail -->
+              <div class="verify-box" id="emailVerifyBox" hidden>
+                <div class="verify-hint" id="emailVerifyHint">Код подтверждения отправлен на указанный E-mail.</div>
+                <div class="input-action-row">
+                  <input type="text" id="emailCodeInput" class="form-input" placeholder="Введите 6-значный код с почты" maxlength="6">
+                  <button type="button" class="btn btn-accent" onclick="confirmEmailCode()">
+                    ✓ Подтвердить E-mail
+                  </button>
+                </div>
+              </div>
+              <span class="save-msg" id="emailSaveMsg" hidden></span>
+            </div>
+
+            <hr class="panel-divider">
+
+            <!-- Расположенный ниже .form-group с редактируемым номером телефона и СМС-подтверждением -->
+            <div class="form-group">
+              <label for="inputPhone">Номер телефона (с СМС-подтверждением)</label>
+              <div class="input-action-row">
+                <input type="tel" id="inputPhone" class="form-input" placeholder="+7 (999) 000-00-00" required>
+                <button type="button" class="btn btn-primary" onclick="requestSmsVerification()">
+                  📱 Получить СМС-код
+                </button>
+              </div>
+
+              <!-- Поле ввода СМС-кода -->
+              <div class="verify-box" id="phoneVerifyBox" hidden>
+                <div class="verify-hint" id="phoneVerifyHint">СМС с кодом отправлено на ваш номер телефона.</div>
+                <div class="input-action-row">
+                  <input type="text" id="phoneCodeInput" class="form-input" placeholder="Введите 4-значный СМС-код" maxlength="4">
+                  <button type="button" class="btn btn-accent" onclick="confirmSmsCode()">
+                    ✓ Подтвердить по СМС
+                  </button>
+                </div>
+              </div>
+              <span class="save-msg" id="phoneSaveMsg" hidden></span>
             </div>
           </div>
 
@@ -267,7 +303,10 @@
   <script src="auth.js"></script>
   <script>
     let currentUserKey = 'guest';
-    let currentUserObj = null;
+    let pendingEmail = '';
+    let generatedEmailCode = '';
+    let pendingPhone = '';
+    let generatedSmsCode = '';
 
     /* Переключение вкладок кабинета */
     window.switchProfileTab = function (tabName) {
@@ -278,7 +317,6 @@
       });
     };
 
-    /* Получение и сохранение кастомных данных профиля (аватар, шапка, имя, активность) */
     function getProfileMeta(key) {
       try {
         return JSON.parse(localStorage.getItem('pp3d_profile_' + key) || '{}');
@@ -294,42 +332,23 @@
       return updated;
     }
 
-    /* Расчёт рейтинга и персональной скидки от заказов и активности */
+    /* Расчёт рейтинга и персональной скидки */
     function updateLoyaltyAndDiscount(key, ordersCount, cartCount, visitsCount) {
       const xp = 100 + (ordersCount * 150) + (cartCount * 25) + (visitsCount * 15);
-      let discount = 3;
-      let tier = 'Старт';
-      let rating = 4.3;
-      let stars = '★★★★☆';
-      let nextTierText = '';
-      let progressPct = 18;
+      let discount = 3, tier = 'Старт', rating = 4.4, stars = '★★★★☆', nextTierText = '', progressPct = 18;
 
       if (xp >= 1000) {
-        discount = 15;
-        tier = 'VIP Мастер';
-        rating = 5.0;
-        stars = '★★★★★';
-        nextTierText = 'Максимальный уровень достигнут!';
-        progressPct = 100;
+        discount = 15; tier = 'VIP Мастер'; rating = 5.0; stars = '★★★★★';
+        nextTierText = 'Максимальный уровень достигнут!'; progressPct = 100;
       } else if (xp >= 500) {
-        discount = 10;
-        tier = 'Инженер 3D';
-        rating = 4.9;
-        stars = '★★★★★';
+        discount = 10; tier = 'Инженер 3D'; rating = 4.9; stars = '★★★★★';
         nextTierText = `До уровня VIP Мастер (15%): ${1000 - xp} XP`;
         progressPct = 66 + Math.round(((xp - 500) / 500) * 34);
       } else if (xp >= 200) {
-        discount = 5;
-        tier = 'Активный клиент';
-        rating = 4.7;
-        stars = '★★★★★';
+        discount = 5; tier = 'Активный клиент'; rating = 4.7; stars = '★★★★★';
         nextTierText = `До уровня Инженер 3D (10%): ${500 - xp} XP`;
         progressPct = 33 + Math.round(((xp - 200) / 300) * 33);
       } else {
-        discount = 3;
-        tier = 'Старт';
-        rating = 4.4;
-        stars = '★★★★☆';
         nextTierText = `До уровня Активный (5%): ${200 - xp} XP`;
         progressPct = Math.max(12, Math.round((xp / 200) * 33));
       }
@@ -348,7 +367,6 @@
       document.getElementById('loyaltyProgressFill').style.width = `${progressPct}%`;
     }
 
-    /* Отрисовка аватара (180x180) и шапки (896x100) */
     function renderMedia(meta) {
       const avatarImg = document.getElementById('avatarImg');
       const avatarEmoji = document.getElementById('avatarEmoji');
@@ -370,7 +388,6 @@
       }
     }
 
-    /* Кадрирование изображения через Canvas для надёжного хранения в localStorage */
     function resizeImageFile(file, targetW, targetH, callback) {
       const reader = new FileReader();
       reader.onload = function (e) {
@@ -393,7 +410,7 @@
       reader.readAsDataURL(file);
     }
 
-    /* Обработчик загрузки Аватара (180x180px, Retina 360x360px) */
+    /* Загрузка Аватара (180x180px) */
     document.getElementById('avatarInput').addEventListener('change', function (e) {
       const file = e.target.files[0];
       if (!file) return;
@@ -412,24 +429,23 @@
       renderMedia(meta);
     };
 
-    /* Обработчик загрузки Шапки профиля (896x100px, до 5 МБ) */
+    /* Загрузка Шапки профиля (по ширине profile-grid, высота 200px, до 5 МБ) */
     document.getElementById('bannerInput').addEventListener('change', function (e) {
       const file = e.target.files[0];
       const statusEl = document.getElementById('bannerStatus');
       if (!file) return;
 
-      const maxBytes = 5 * 1024 * 1024; // 5 МБ
-      if (file.size > maxBytes) {
+      if (file.size > 5 * 1024 * 1024) {
         statusEl.textContent = '❌ Ошибка: размер файла превышает 5 МБ!';
         statusEl.style.color = '#f87171';
         this.value = '';
         return;
       }
 
-      resizeImageFile(file, 896, 100, function (dataUrl) {
+      resizeImageFile(file, 1120, 200, function (dataUrl) {
         const meta = saveProfileMeta(currentUserKey, { bannerDataUrl: dataUrl });
         renderMedia(meta);
-        statusEl.textContent = `✓ Шапка 896×100 px успешно загружена (${(file.size / 1024 / 1024).toFixed(2)} МБ)`;
+        statusEl.textContent = `✓ Шапка (высота 200 px) успешно загружена (${(file.size / 1024 / 1024).toFixed(2)} МБ)`;
         statusEl.style.color = '#34d399';
       });
     });
@@ -438,15 +454,14 @@
       const meta = saveProfileMeta(currentUserKey, { bannerDataUrl: null });
       renderMedia(meta);
       const statusEl = document.getElementById('bannerStatus');
-      statusEl.textContent = 'Шапка сброшена к стандартному фону (896×100 px)';
+      statusEl.textContent = 'Шапка сброшена к стандартному фону (высота 200 px)';
       statusEl.style.color = '';
     };
 
-    /* Сохранение нового имени пользователя */
+    /* Сохранение имени пользователя */
     window.saveUserName = function (e) {
       e.preventDefault();
-      const input = document.getElementById('inputUserName');
-      const newName = input.value.trim();
+      const newName = document.getElementById('inputUserName').value.trim();
       if (!newName) return;
 
       saveProfileMeta(currentUserKey, { customName: newName });
@@ -456,6 +471,98 @@
       const msg = document.getElementById('nameSaveMsg');
       msg.hidden = false;
       setTimeout(() => { msg.hidden = true; }, 2500);
+    };
+
+    /* Подтверждение смены E-mail по коду на почту */
+    window.requestEmailVerification = function () {
+      const emailInput = document.getElementById('inputEmail');
+      const newEmail = emailInput.value.trim();
+      const saveMsg = document.getElementById('emailSaveMsg');
+      saveMsg.hidden = true;
+
+      if (!newEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newEmail)) {
+        saveMsg.textContent = '❌ Введите корректный адрес электронной почты.';
+        saveMsg.style.color = '#f87171';
+        saveMsg.hidden = false;
+        return;
+      }
+
+      pendingEmail = newEmail;
+      generatedEmailCode = String(Math.floor(100000 + Math.random() * 900000));
+
+      const verifyBox = document.getElementById('emailVerifyBox');
+      const verifyHint = document.getElementById('emailVerifyHint');
+      verifyHint.innerHTML = `📩 Письмо с 6-значным кодом отправлено на <b>${newEmail}</b> (код подтверждения: <b>${generatedEmailCode}</b>)`;
+      verifyBox.hidden = false;
+      document.getElementById('emailCodeInput').focus();
+    };
+
+    window.confirmEmailCode = function () {
+      const entered = document.getElementById('emailCodeInput').value.trim();
+      const saveMsg = document.getElementById('emailSaveMsg');
+
+      if (!generatedEmailCode || entered !== generatedEmailCode) {
+        saveMsg.textContent = '❌ Неверный код подтверждения E-mail. Проверьте код и попробуйте снова.';
+        saveMsg.style.color = '#f87171';
+        saveMsg.hidden = false;
+        return;
+      }
+
+      saveProfileMeta(currentUserKey, { customEmail: pendingEmail });
+      document.getElementById('pEmail').textContent = pendingEmail;
+      document.getElementById('pInfoEmail').textContent = pendingEmail;
+      document.getElementById('emailVerifyBox').hidden = true;
+      document.getElementById('emailCodeInput').value = '';
+
+      saveMsg.textContent = '✓ E-mail успешно подтверждён и обновлён!';
+      saveMsg.style.color = '#34d399';
+      saveMsg.hidden = false;
+    };
+
+    /* Подтверждение смены номера телефона по СМС-коду */
+    window.requestSmsVerification = function () {
+      const phoneInput = document.getElementById('inputPhone');
+      const newPhone = phoneInput.value.trim();
+      const saveMsg = document.getElementById('phoneSaveMsg');
+      saveMsg.hidden = true;
+
+      if (!newPhone || newPhone.replace(/\D/g, '').length < 10) {
+        saveMsg.textContent = '❌ Введите корректный номер телефона (минимум 10 цифр).';
+        saveMsg.style.color = '#f87171';
+        saveMsg.hidden = false;
+        return;
+      }
+
+      pendingPhone = newPhone;
+      generatedSmsCode = String(Math.floor(1000 + Math.random() * 9000));
+
+      const verifyBox = document.getElementById('phoneVerifyBox');
+      const verifyHint = document.getElementById('phoneVerifyHint');
+      verifyHint.innerHTML = `📲 СМС-код отправлен на номер <b>${newPhone}</b> (ваш СМС-код: <b>${generatedSmsCode}</b>)`;
+      verifyBox.hidden = false;
+      document.getElementById('phoneCodeInput').focus();
+    };
+
+    window.confirmSmsCode = function () {
+      const entered = document.getElementById('phoneCodeInput').value.trim();
+      const saveMsg = document.getElementById('phoneSaveMsg');
+
+      if (!generatedSmsCode || entered !== generatedSmsCode) {
+        saveMsg.textContent = '❌ Неверный СМС-код. Проверьте цифры и попробуйте ещё раз.';
+        saveMsg.style.color = '#f87171';
+        saveMsg.hidden = false;
+        return;
+      }
+
+      saveProfileMeta(currentUserKey, { customPhone: pendingPhone });
+      document.getElementById('pPhoneCard').textContent = pendingPhone;
+      document.getElementById('pPhone').textContent = pendingPhone;
+      document.getElementById('phoneVerifyBox').hidden = true;
+      document.getElementById('phoneCodeInput').value = '';
+
+      saveMsg.textContent = '✓ Номер телефона подтверждён по СМС и сохранён!';
+      saveMsg.style.color = '#34d399';
+      saveMsg.hidden = false;
     };
 
     /* Инициализация личного кабинета */
@@ -468,7 +575,6 @@
       }
       if (!user) { window.location.href = 'login.html'; return; }
 
-      currentUserObj = user;
       currentUserKey = (user.email || user.id || 'user').toLowerCase();
 
       const meta = getProfileMeta(currentUserKey);
@@ -476,8 +582,8 @@
       saveProfileMeta(currentUserKey, { visits });
 
       const displayName = meta.customName || user.name || 'Пользователь';
-      const displayEmail = user.email || '—';
-      const displayPhone = user.phone || 'Не указан при регистрации';
+      const displayEmail = meta.customEmail || user.email || '—';
+      const displayPhone = meta.customPhone || user.phone || 'Не указан';
       const displayDate = user.createdAt
         ? new Date(user.createdAt).toLocaleDateString('ru-RU')
         : '—';
@@ -488,10 +594,11 @@
 
       document.getElementById('pEmail').textContent = displayEmail;
       document.getElementById('pInfoEmail').textContent = displayEmail;
+      document.getElementById('inputEmail').value = displayEmail !== '—' ? displayEmail : '';
 
       document.getElementById('pPhoneCard').textContent = displayPhone;
       document.getElementById('pPhone').textContent = displayPhone;
-      document.getElementById('readonlyPhone').value = displayPhone;
+      document.getElementById('inputPhone').value = displayPhone !== 'Не указан' ? displayPhone : '';
 
       document.getElementById('pDate').textContent = displayDate;
 
