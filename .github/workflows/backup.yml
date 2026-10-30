@@ -45,14 +45,28 @@ jobs:
   database:
     name: Back up Supabase PostgreSQL database
     runs-on: ubuntu-latest
-    if: ${{ secrets.SUPABASE_DB_URL != '' && secrets.BACKUP_ENCRYPTION_PASSPHRASE != '' }}
     steps:
+      - name: Check whether database backup secrets are configured
+        id: secrets-check
+        env:
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+          BACKUP_ENCRYPTION_PASSPHRASE: ${{ secrets.BACKUP_ENCRYPTION_PASSPHRASE }}
+        shell: bash
+        run: |
+          if [[ -n "$SUPABASE_DB_URL" && -n "$BACKUP_ENCRYPTION_PASSPHRASE" ]]; then
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Install PostgreSQL client and GnuPG
+        if: steps.secrets-check.outputs.enabled == 'true'
         run: |
           sudo apt-get update
           sudo apt-get install -y postgresql-client gnupg
 
       - name: Create and encrypt database dump
+        if: steps.secrets-check.outputs.enabled == 'true'
         env:
           SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
           BACKUP_ENCRYPTION_PASSPHRASE: ${{ secrets.BACKUP_ENCRYPTION_PASSPHRASE }}
@@ -71,6 +85,7 @@ jobs:
           sha256sum supabase-database.dump.gpg > SHA256SUMS
 
       - name: Upload encrypted database backup
+        if: steps.secrets-check.outputs.enabled == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: 3d-market-supabase-db-${{ github.run_id }}
@@ -78,11 +93,7 @@ jobs:
           if-no-files-found: error
           retention-days: 90
 
-  database-not-configured:
-    name: Explain database backup setup
-    runs-on: ubuntu-latest
-    if: ${{ secrets.SUPABASE_DB_URL == '' || secrets.BACKUP_ENCRYPTION_PASSPHRASE == '' }}
-    steps:
-      - name: Show setup notice
+      - name: Explain database backup setup
+        if: steps.secrets-check.outputs.enabled != 'true'
         run: |
           echo "::notice::Repository backup will run, but Supabase database backup is skipped until SUPABASE_DB_URL and BACKUP_ENCRYPTION_PASSPHRASE are configured in GitHub Actions secrets."
