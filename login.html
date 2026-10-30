@@ -235,6 +235,243 @@
       const currentInput = document.getElementById('email').value.trim();
       if (currentInput.includes('@')) {
         document.getElementById('recoverEmail').value = currentInput;
+      }E html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Вход и восстановление пароля — 3D Print Studio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="login.css">
+</head>
+<body>
+
+  <!-- Фоновая технологичная сетка -->
+  <div class="bg-grid" aria-hidden="true"></div>
+
+  <!-- ═════ НАВИГАЦИЯ ═════ -->
+  <nav class="nav">
+    <a href="index.html" class="logo">
+      <span class="badge-icon">◈</span>
+      3D<span>Print</span>Studio
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html">Главная</a></li>
+      <li><a href="products.html">Товары</a></li>
+      <li><a href="upload.html">Калькулятор</a></li>
+      <li><a href="index.html#services">Услуги и ремонт</a></li>
+      <li><a href="index.html#contacts">Контакты</a></li>
+    </ul>
+    <div class="nav-auth" id="navAuth">
+      <a href="login.html" class="btn-login">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+          <circle cx="12" cy="7" r="4"></circle>
+        </svg>
+        <span>Войти</span>
+      </a>
+      <a href="register.html" class="btn-register">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+          <circle cx="8.5" cy="7" r="4"></circle>
+          <line x1="20" y1="8" x2="20" y2="14"></line>
+          <line x1="23" y1="11" x2="17" y2="11"></line>
+        </svg>
+        <span>Регистрация</span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- ═════ ОСНОВНОЙ КОНТЕЙНЕР АВТОРИЗАЦИИ И ВОССТАНОВЛЕНИЯ ═════ -->
+  <main class="auth-container">
+    <div class="auth-wrapper">
+
+      <!-- Левая информационная Bento-панель -->
+      <div class="auth-promo">
+        <div>
+          <span class="section-kicker">Безопасность и доступ</span>
+          <h2>Личный кабинет <span>3D Print Studio</span></h2>
+          <p class="promo-desc">Войдите по своему Email, чтобы отслеживать заказы, статус 3D-печати и сохранённые расчёты.</p>
+
+          <div class="promo-features">
+            <div class="promo-item">
+              <div class="promo-icon">🔐</div>
+              <div>
+                <div class="promo-item-title">Вход по Email</div>
+                <div class="promo-item-text">Используйте Email и пароль для входа в личный кабинет.</div>
+              </div>
+            </div>
+            <div class="promo-item">
+              <div class="promo-icon">🛡️</div>
+              <div>
+                <div class="promo-item-title">Анонимное восстановление пароля</div>
+                <div class="promo-item-text">Новый пароль скрыт от посторонних глаз: он отправляется закрытым письмом на ваш E-mail и дублируется в SMS на привязанный телефон.</div>
+              </div>
+            </div>
+            <div class="promo-item">
+              <div class="promo-icon">📦</div>
+              <div>
+                <div class="promo-item-title">История заказов и 3D-моделей</div>
+                <div class="promo-item-text">Все ваши STL-расчёты и трек-номера СДЭК всегда под рукой.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="promo-footer-badge">
+          <span class="pulse-dot"></span>
+          <span>Защищённая двухканальная отправка (E-mail + SMS)</span>
+        </div>
+      </div>
+
+      <!-- Правая карточка: ЭКРАН 1 — ВХОД В АККАУНТ -->
+      <div class="auth-card" id="loginView">
+        <div class="auth-card-header">
+          <div class="auth-icon-badge">👋</div>
+          <h1>С возвращением</h1>
+          <p class="sub">Войдите в аккаунт, чтобы видеть историю заказов</p>
+        </div>
+
+        <div class="error-msg" id="errorBox"></div>
+
+        <div class="form-group">
+          <label for="email">Email или номер телефона</label>
+          <div class="input-wrap">
+            <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+              <polyline points="22,6 12,13 2,6"></polyline>
+            </svg>
+            <input type="text" id="email" placeholder="you@example.com или 89289699985" autocomplete="username">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="label-row">
+            <label for="password">Пароль</label>
+            <button type="button" class="forgot-link-inline" onclick="openRecoverPage()">Забыли пароль?</button>
+          </div>
+          <div class="input-wrap">
+            <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+            <input type="password" id="password" placeholder="••••••••" autocomplete="current-password">
+            <button type="button" class="toggle-pass-btn" onclick="togglePassVisibility('password', this)" aria-label="Показать пароль">👁️</button>
+          </div>
+        </div>
+
+        <button class="btn btn-primary btn-submit" onclick="handleLogin()">
+          <span>Войти в аккаунт</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+            <polyline points="10 17 15 12 10 7"></polyline>
+            <line x1="15" y1="12" x2="3" y2="12"></line>
+          </svg>
+        </button>
+
+        <!-- Клавиша перехода к форме восстановления пароля -->
+        <button type="button" class="btn btn-recover-trigger" onclick="openRecoverPage()">
+          🔑 Восстановить пароль
+        </button>
+
+        <div class="auth-footer">
+          Ещё нет аккаунта? <a href="register.html">Создать аккаунт</a>
+        </div>
+      </div>
+
+      <!-- Правая карточка: ЭКРАН 2 — ФОРМА АНОНИМНОГО ВОССТАНОВЛЕНИЯ ПАРОЛЯ -->
+      <div class="auth-card" id="recoverView" hidden>
+        <div class="auth-card-header">
+          <div class="auth-icon-badge">🔐</div>
+          <h1>Восстановление пароля</h1>
+          <p class="sub">Укажите Email, на него придёт безопасная ссылка для создания нового пароля.</p>
+        </div>
+
+        <div class="error-msg" id="recoverErrorBox"></div>
+
+        <!-- Блок статуса анонимной доставки (без показа самого пароля) -->
+        <div class="delivery-status" id="deliveryStatusBox" hidden>
+          <div class="delivery-header">✅ Новый пароль успешно отправлен</div>
+          <div class="channel-row">
+            <span class="channel-icon">📧</span>
+            <div class="channel-info">
+              <div class="channel-title">Письмо отправлено на Email</div>
+              <div class="channel-target" id="maskedEmailTarget">***@***</div>
+            </div>
+            <span class="channel-badge">Отправлено</span>
+          </div>
+          <div class="channel-row">
+            <span class="channel-icon">🔐</span>
+            <div class="channel-info">
+              <div class="channel-title">Следующий шаг</div>
+              <div class="channel-target" id="maskedPhoneTarget">Откройте ссылку в письме</div>
+            </div>
+            <span class="channel-badge">Email</span>
+          </div>
+          <div class="delivery-note">
+            Откройте письмо и перейдите по ссылке, чтобы задать новый пароль.
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="recoverEmail">E-Mail электронной почты</label>
+          <div class="input-wrap">
+            <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+              <polyline points="22,6 12,13 2,6"></polyline>
+            </svg>
+            <input type="email" id="recoverEmail" placeholder="you@example.com" autocomplete="email">
+          </div>
+        </div>
+
+        <!-- 2 кнопки под формой ввода -->
+        <div class="recover-buttons-group">
+          <button type="button" class="btn btn-primary btn-submit" id="btnSendPrimary" onclick="handleRecoverPassword()">
+            <span>✉️ Отправить ссылку для сброса пароля</span>
+          </button>
+
+          <button type="button" class="btn btn-accent btn-submit" id="btnSendResend" onclick="handleRecoverPassword()">
+            <span>📲 Отправить письмо повторно</span>
+          </button>
+        </div>
+
+        <div class="auth-footer">
+          Уже восстановили доступ? <a href="#login" onclick="openLoginPage(event)">← Вернуться ко входу</a>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    © 2026 3D Print Studio. Все права защищены.
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="auth.js"></script>
+  <script>
+    // Показать/скрыть вводимый пароль на форме входа
+    function togglePassVisibility(inputId, btn) {
+      const input = document.getElementById(inputId);
+      if (input.type === 'password') {
+        input.type = 'text';
+        btn.textContent = '🙈';
+      } else {
+        input.type = 'password';
+        btn.textContent = '👁️';
+      }
+    }
+
+    // Открыть форму восстановления пароля
+    function openRecoverPage() {
+      document.getElementById('loginView').hidden = true;
+      document.getElementById('recoverView').hidden = false;
+      document.getElementById('recoverErrorBox').style.display = 'none';
+      document.getElementById('deliveryStatusBox').hidden = true;
+
+      const currentInput = document.getElementById('email').value.trim();
+      if (currentInput.includes('@')) {
+        document.getElementById('recoverEmail').value = currentInput;
       } else if (currentInput.replace(/\D/g, '').length >= 10) {
         document.getElementById('recoverPhone').value = currentInput;
       }
